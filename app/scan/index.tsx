@@ -47,7 +47,7 @@ export default function ScanScreen() {
         </View>
         <Text className="mt-5 text-center text-lg font-bold text-gray-900">Camera access needed</Text>
         <Text className="mt-2 text-center text-sm text-gray-500">
-          FreshCart needs camera access to scan product barcodes during self-checkout.
+          FreshCart needs camera access to scan product barcodes at checkout.
         </Text>
         <View className="mt-6 w-full gap-3">
           {permission.canAskAgain ? (
@@ -103,7 +103,7 @@ export default function ScanScreen() {
         >
           <Ionicons name="cart-outline" size={18} color="#111827" />
           <Text className="ml-2 text-sm font-semibold text-gray-900">
-            View Cart{cartCount > 0 ? ` (${cartCount})` : ''}
+            Current Sale{cartCount > 0 ? ` (${cartCount})` : ''}
           </Text>
         </Pressable>
       </SafeAreaView>

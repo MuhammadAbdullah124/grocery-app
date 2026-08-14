@@ -1,22 +1,13 @@
 import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
-import type { Order, OrderStatus } from '@/types';
+import type { Order, PaymentMethod } from '@/types';
 import { formatDate, formatPrice } from '@/utils/format';
-import { Badge, type BadgeVariant } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/Badge';
 
-const statusVariant: Record<OrderStatus, BadgeVariant> = {
-  pending: 'warning',
-  verified: 'success',
-  rejected: 'danger',
-  completed: 'primary',
-};
-
-const statusLabel: Record<OrderStatus, string> = {
-  pending: 'Pending',
-  verified: 'Verified',
-  rejected: 'Rejected',
-  completed: 'Completed',
+const paymentLabel: Record<PaymentMethod, string> = {
+  cash: 'Cash',
+  card: 'Card',
 };
 
 interface OrderCardProps {
@@ -35,7 +26,7 @@ function OrderCardBase({ order }: OrderCardProps) {
     >
       <View className="flex-row items-center justify-between">
         <Text className="text-sm font-bold text-gray-900">{order.orderNumber}</Text>
-        <Badge label={statusLabel[order.status]} variant={statusVariant[order.status]} />
+        <Badge label={paymentLabel[order.paymentMethod]} variant="neutral" />
       </View>
       <Text className="mt-1 text-xs text-gray-400">{formatDate(order.createdAt)}</Text>
       <View className="mt-3 flex-row items-center justify-between">

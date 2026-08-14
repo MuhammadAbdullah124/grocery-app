@@ -37,9 +37,11 @@ export default function RegisterScreen() {
 
   return (
     <Screen scroll contentContainerClassName="pb-10">
-      <Header title="Create Account" />
+      <Header title="Create Owner Account" />
       <View className="px-6 pt-2">
-        <Text className="text-sm text-gray-500">Sign up to start scanning and skip the line.</Text>
+        <Text className="text-sm text-gray-500">
+          Set up your store owner account to start processing sales.
+        </Text>
 
         <View className="mt-6 gap-4">
           <Input label="Full Name" placeholder="Ahmed Raza" leftIcon="person-outline" value={name} onChangeText={setName} />

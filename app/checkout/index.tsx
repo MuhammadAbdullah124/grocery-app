@@ -20,14 +20,8 @@ const PAYMENT_OPTIONS: {
   description: string;
   icon: keyof typeof Ionicons.glyphMap;
 }[] = [
-  {
-    id: 'counter',
-    label: 'Pay at Checkout Counter',
-    description: 'Settle your bill with store staff on your way out',
-    icon: 'storefront-outline',
-  },
-  { id: 'cash', label: 'Cash', description: 'Pay with cash at the counter', icon: 'cash-outline' },
-  { id: 'card', label: 'Card', description: 'Pay by debit or credit card at the counter', icon: 'card-outline' },
+  { id: 'cash', label: 'Cash', description: 'Customer pays with cash', icon: 'cash-outline' },
+  { id: 'card', label: 'Card', description: 'Customer pays by debit or credit card', icon: 'card-outline' },
 ];
 
 export default function CheckoutScreen() {
@@ -41,11 +35,11 @@ export default function CheckoutScreen() {
   const { data: store } = useStore(storeId);
   const createOrder = useCreateOrder();
 
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('counter');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
 
-  const handleCompleteShopping = async () => {
+  const handleCompleteSale = async () => {
     if (items.length === 0) {
-      Alert.alert('Your cart is empty', 'Add some products before checking out.');
+      Alert.alert('No items scanned', 'Scan at least one product before completing the sale.');
       return;
     }
     try {
@@ -58,7 +52,7 @@ export default function CheckoutScreen() {
       clearCart();
       router.replace({ pathname: '/checkout/success', params: { orderId: order.id } });
     } catch {
-      Alert.alert('Checkout failed', 'Something went wrong while placing your order. Please try again.');
+      Alert.alert('Checkout failed', 'Something went wrong while completing the sale. Please try again.');
     }
   };
 
@@ -67,7 +61,7 @@ export default function CheckoutScreen() {
       <StatusBar style="dark" />
       <Header title="Checkout" />
       <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
-        <Text className="text-base font-bold text-gray-900">Order Summary</Text>
+        <Text className="text-base font-bold text-gray-900">Sale Summary</Text>
         <View className="mt-3 gap-3">
           {items.map((item) => (
             <View key={item.productId} className="flex-row items-center justify-between">
@@ -138,10 +132,10 @@ export default function CheckoutScreen() {
 
       <View className="border-t border-gray-100 px-5 pb-2 pt-4">
         <Button
-          label="Complete Shopping"
+          label="Complete Sale"
           size="lg"
           loading={createOrder.isPending}
-          onPress={handleCompleteShopping}
+          onPress={handleCompleteSale}
         />
       </View>
     </SafeAreaView>

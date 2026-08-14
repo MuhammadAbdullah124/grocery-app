@@ -20,9 +20,9 @@ export default function CheckoutSuccessScreen() {
         <View className="h-24 w-24 items-center justify-center rounded-full bg-primary-50">
           <Ionicons name="checkmark-circle" size={56} color="#1db567" />
         </View>
-        <Text className="mt-6 text-2xl font-bold text-gray-900">Order placed!</Text>
+        <Text className="mt-6 text-2xl font-bold text-gray-900">Sale completed!</Text>
         <Text className="mt-2 text-center text-sm text-gray-500">
-          Show your digital receipt at the exit for verification.
+          Give the customer their digital receipt.
         </Text>
 
         {orderQuery.isLoading ? (

@@ -1,7 +1,7 @@
 export const APP_NAME = 'FreshCart';
 
 export const APP_DESCRIPTION =
-  'Scan, bag, and go. Skip the checkout line with self-checkout scanning.';
+  'Scan products at checkout and process sales in seconds.';
 
 export const CURRENCY_SYMBOL = 'Rs.';
 

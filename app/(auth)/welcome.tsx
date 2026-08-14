@@ -33,13 +33,13 @@ export default function WelcomeScreen() {
               <View className="h-12 w-12 items-center justify-center rounded-2xl bg-primary-50">
                 <Ionicons name="cart-outline" size={22} color="#129253" />
               </View>
-              <Text className="text-xs text-gray-500">Bag</Text>
+              <Text className="text-xs text-gray-500">Total</Text>
             </View>
             <View className="items-center gap-2">
               <View className="h-12 w-12 items-center justify-center rounded-2xl bg-primary-50">
                 <Ionicons name="qr-code-outline" size={22} color="#129253" />
               </View>
-              <Text className="text-xs text-gray-500">Go</Text>
+              <Text className="text-xs text-gray-500">Receipt</Text>
             </View>
           </View>
           <Button label="Continue" size="lg" onPress={() => router.push('/(auth)/login')} />

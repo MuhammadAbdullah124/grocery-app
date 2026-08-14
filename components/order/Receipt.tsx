@@ -5,7 +5,6 @@ import { Divider } from '@/components/ui/Divider';
 import { APP_NAME } from '@/constants/config';
 
 const paymentLabels: Record<Order['paymentMethod'], string> = {
-  counter: 'Pay at Checkout Counter',
   cash: 'Cash',
   card: 'Card',
 };

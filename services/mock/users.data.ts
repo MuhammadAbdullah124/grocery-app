@@ -6,4 +6,5 @@ export const MOCK_USER: User = {
   email: 'ahmed.raza@example.com',
   phone: '+92 300 1234567',
   avatar: null,
+  role: 'owner',
 };

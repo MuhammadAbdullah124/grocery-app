@@ -26,14 +26,3 @@ export function useCreateOrder() {
     },
   });
 }
-
-export function useVerifyOrderExit() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => ordersApi.verifyOrderExit(id),
-    onSuccess: (order) => {
-      queryClient.setQueryData(['order', order.id], order);
-      queryClient.invalidateQueries({ queryKey: ['orders'] });
-    },
-  });
-}

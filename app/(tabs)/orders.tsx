@@ -16,11 +16,11 @@ export default function OrdersScreen() {
     <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
       <StatusBar style="dark" />
       <View className="px-5 pb-2 pt-3">
-        <Text className="text-2xl font-bold text-gray-900">Order History</Text>
+        <Text className="text-2xl font-bold text-gray-900">Sales History</Text>
       </View>
 
       {ordersQuery.isError ? (
-        <ErrorState description="We couldn't load your orders." onAction={() => ordersQuery.refetch()} />
+        <ErrorState description="We couldn't load your sales." onAction={() => ordersQuery.refetch()} />
       ) : ordersQuery.isLoading ? (
         <View className="gap-3 px-5 pt-2">
           {[1, 2, 3].map((i) => (
@@ -40,10 +40,10 @@ export default function OrdersScreen() {
       ) : (
         <EmptyState
           icon="receipt-outline"
-          title="No orders yet"
-          description="Your completed purchases will show up here."
-          actionLabel="Start Shopping"
-          onAction={() => router.push('/(tabs)')}
+          title="No sales yet"
+          description="Completed sales will show up here."
+          actionLabel="Scan Product"
+          onAction={() => router.push('/scan')}
         />
       )}
     </SafeAreaView>

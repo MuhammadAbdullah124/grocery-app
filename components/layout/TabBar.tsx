@@ -14,7 +14,7 @@ const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
 const labels: Record<string, string> = {
   index: 'Home',
   search: 'Search',
-  orders: 'Orders',
+  orders: 'Sales',
   profile: 'Profile',
 };
 

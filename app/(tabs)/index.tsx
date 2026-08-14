@@ -127,7 +127,7 @@ export default function HomeScreen() {
             <Ionicons name="cart-outline" size={26} color="#111827" />
             {cartCount > 0 ? <Badge label={String(cartCount)} variant="primary" /> : null}
           </View>
-          <Text className="mt-3 text-base font-bold text-gray-900">View Cart</Text>
+          <Text className="mt-3 text-base font-bold text-gray-900">Current Sale</Text>
           <Text className="mt-0.5 text-xs text-gray-400">
             {cartCount} {cartCount === 1 ? 'item' : 'items'}
           </Text>
@@ -153,7 +153,7 @@ export default function HomeScreen() {
       </View>
 
       <View className="mt-7">
-        <Text className="px-5 text-base font-bold text-gray-900">Deals for you</Text>
+        <Text className="px-5 text-base font-bold text-gray-900">Active Discounts</Text>
         {dealsQuery.isLoading ? (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-3 pl-5">
             {[1, 2, 3].map((i) => (
@@ -178,7 +178,7 @@ export default function HomeScreen() {
         )}
       </View>
 
-      <Text className="mt-7 px-5 text-base font-bold text-gray-900">Popular Products</Text>
+      <Text className="mt-7 px-5 text-base font-bold text-gray-900">Quick Add</Text>
     </View>
   );
 

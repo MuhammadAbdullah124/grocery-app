@@ -1,8 +1,8 @@
 import type { CartItem } from './cart';
 
-export type PaymentMethod = 'counter' | 'cash' | 'card';
+export type PaymentMethod = 'cash' | 'card';
 
-export type OrderStatus = 'pending' | 'verified' | 'rejected' | 'completed';
+export type OrderStatus = 'completed';
 
 export interface OrderItem extends CartItem {
   subtotal: number;

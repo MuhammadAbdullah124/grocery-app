@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { Order, OrderStatus } from '@/types';
+import type { Order } from '@/types';
 
 const ORDERS_KEY = 'freshcart:orders';
 
@@ -32,13 +32,4 @@ export async function saveOrder(order: Order): Promise<Order> {
   orders.push(order);
   await writeOrders(orders);
   return order;
-}
-
-export async function updateOrderStatus(id: string, status: OrderStatus): Promise<Order | null> {
-  const orders = await readOrders();
-  const index = orders.findIndex((o) => o.id === id);
-  if (index === -1) return null;
-  orders[index] = { ...orders[index], status };
-  await writeOrders(orders);
-  return orders[index];
 }

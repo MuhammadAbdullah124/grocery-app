@@ -18,7 +18,7 @@ export default function CartScreen() {
   const clearCart = useCartStore((state) => state.clearCart);
 
   const confirmClearCart = () => {
-    Alert.alert('Clear cart', 'Remove all items from your cart?', [
+    Alert.alert('Clear sale', 'Remove all items from this sale?', [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Clear', style: 'destructive', onPress: clearCart },
     ]);
@@ -28,7 +28,7 @@ export default function CartScreen() {
     <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
       <StatusBar style="dark" />
       <Header
-        title="My Cart"
+        title="Current Sale"
         subtitle={itemCount > 0 ? `${itemCount} ${itemCount === 1 ? 'item' : 'items'}` : undefined}
         right={
           items.length > 0 ? (
@@ -42,8 +42,8 @@ export default function CartScreen() {
       {items.length === 0 ? (
         <EmptyState
           icon="cart-outline"
-          title="No items in your cart"
-          description="Scan a product to start shopping."
+          title="No items in this sale yet"
+          description="Scan a product to add it to the sale."
           actionLabel="Scan Product"
           onAction={() => router.push('/scan')}
         />

@@ -30,7 +30,7 @@ export default function LoginScreen() {
   return (
     <Screen scroll contentContainerClassName="px-6 pb-10 pt-6">
       <Text className="text-2xl font-bold text-gray-900">Welcome back</Text>
-      <Text className="mt-1.5 text-sm text-gray-500">Log in to continue self-checkout shopping.</Text>
+      <Text className="mt-1.5 text-sm text-gray-500">Log in to start ringing up sales.</Text>
 
       <View className="mt-8 gap-4">
         <Input
@@ -66,7 +66,7 @@ export default function LoginScreen() {
       <View className="mt-8 flex-row items-center justify-center">
         <Text className="text-sm text-gray-500">Don&apos;t have an account? </Text>
         <Pressable onPress={() => router.push('/(auth)/register')}>
-          <Text className="text-sm font-semibold text-primary-600">Create account</Text>
+          <Text className="text-sm font-semibold text-primary-600">Create owner account</Text>
         </Pressable>
       </View>
     </Screen>

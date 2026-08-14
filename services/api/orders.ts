@@ -38,7 +38,7 @@ function buildOrderFromItems(input: CreateOrderInput): Order {
     discount,
     total: subtotal - discount,
     paymentMethod: input.paymentMethod,
-    status: 'pending',
+    status: 'completed',
     createdAt: new Date().toISOString(),
   };
 }
@@ -63,19 +63,4 @@ export async function getOrder(id: string): Promise<Order> {
     return order;
   }
   return apiClient.get<Order>(`/orders/${id}`);
-}
-
-/**
- * Simulates the store staff scanning the exit QR code. A real backend would
- * make this decision; here the mock layer randomly approves most exits and
- * occasionally rejects one so all three exit-verification states are reachable.
- */
-export async function verifyOrderExit(id: string): Promise<Order> {
-  if (config.useMockApi) {
-    const outcome = Math.random() < 0.9 ? 'verified' : 'rejected';
-    const order = await mockOrderStore.updateOrderStatus(id, outcome);
-    if (!order) throw new ApiRequestError('Order not found', 'NOT_FOUND');
-    return order;
-  }
-  return apiClient.post<Order>(`/orders/${id}/verify`);
 }
