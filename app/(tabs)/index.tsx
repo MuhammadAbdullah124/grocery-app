@@ -19,20 +19,9 @@ import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useCartStore } from '@/store/cartStore';
 import { useProducts, useDeals } from '@/hooks/useProducts';
-import { useStores } from '@/hooks/useStores';
+import { useSelectedStore } from '@/hooks/useSelectedStore';
 import { getGreeting } from '@/utils/greeting';
-import type { ProductCategory } from '@/types';
-
-const CATEGORY_ORDER: ProductCategory[] = [
-  'fruits',
-  'vegetables',
-  'dairy',
-  'bakery',
-  'beverages',
-  'snacks',
-  'household',
-  'personal_care',
-];
+import { CATEGORY_ORDER } from '@/constants/categories';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -43,8 +32,7 @@ export default function HomeScreen() {
 
   const [storeModalVisible, setStoreModalVisible] = useState(false);
 
-  const { data: stores } = useStores();
-  const selectedStore = stores?.find((s) => s.id === storeId) ?? stores?.[0];
+  const { store: selectedStore, stores } = useSelectedStore();
 
   const productsQuery = useProducts();
   const dealsQuery = useDeals();

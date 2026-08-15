@@ -48,7 +48,7 @@ export async function register(payload: RegisterPayload): Promise<Session> {
     email: payload.email.trim(),
     phone: payload.phone.trim(),
     avatar: null,
-    role: 'owner',
+    role: 'admin',
   };
 
   return persistSession({ token: generateId('token'), user });

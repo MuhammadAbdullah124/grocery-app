@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { productsApi } from '@/services/api';
-import type { ProductCategory } from '@/types';
+import type { ProductCategory, ProductInput } from '@/types';
 
 export function useProducts() {
   return useQuery({
@@ -38,5 +38,38 @@ export function useSearchProducts(query: string) {
     queryKey: ['products', 'search', trimmed],
     queryFn: () => productsApi.searchProducts(trimmed),
     enabled: trimmed.length > 0,
+  });
+}
+
+function useInvalidateProducts() {
+  const queryClient = useQueryClient();
+  return () => queryClient.invalidateQueries({ queryKey: ['products'] });
+}
+
+export function useCreateProduct() {
+  const invalidate = useInvalidateProducts();
+  return useMutation({
+    mutationFn: (input: ProductInput) => productsApi.createProduct(input),
+    onSuccess: invalidate,
+  });
+}
+
+export function useUpdateProduct() {
+  const queryClient = useQueryClient();
+  const invalidate = useInvalidateProducts();
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input: ProductInput }) => productsApi.updateProduct(id, input),
+    onSuccess: (product) => {
+      queryClient.setQueryData(['product', product.id], product);
+      invalidate();
+    },
+  });
+}
+
+export function useDeleteProduct() {
+  const invalidate = useInvalidateProducts();
+  return useMutation({
+    mutationFn: (id: string) => productsApi.deleteProduct(id),
+    onSuccess: invalidate,
   });
 }

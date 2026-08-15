@@ -11,18 +11,8 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { CategoryChip } from '@/components/product/CategoryChip';
 import { ProductListItem } from '@/components/product/ProductListItem';
 import { useProducts, useProductsByCategory, useSearchProducts } from '@/hooks/useProducts';
+import { CATEGORY_ORDER } from '@/constants/categories';
 import type { Product, ProductCategory } from '@/types';
-
-const CATEGORY_ORDER: ProductCategory[] = [
-  'fruits',
-  'vegetables',
-  'dairy',
-  'bakery',
-  'beverages',
-  'snacks',
-  'household',
-  'personal_care',
-];
 
 export default function SearchScreen() {
   const params = useLocalSearchParams<{ category?: string }>();

@@ -30,3 +30,16 @@ export interface ProductCategoryMeta {
   label: string;
   icon: string;
 }
+
+export interface ProductInput {
+  barcode: string;
+  name: string;
+  brand: string;
+  description: string;
+  category: ProductCategory;
+  price: number;
+  discountPrice: number | null;
+  stock: number;
+  unit: ProductUnit;
+  image?: string;
+}

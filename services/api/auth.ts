@@ -1,7 +1,7 @@
 import { config } from '@/constants/config';
 import type { AuthCredentials, RegisterPayload, User } from '@/types';
 import { apiClient } from './client';
-import { setAuthToken, clearAuthToken } from '@/lib/secureStore';
+import { setAuthToken, clearAuthToken, getAuthToken } from '@/lib/secureStore';
 import * as mockAuthStore from '@/services/mock/authStore';
 
 export interface AuthSession {
@@ -34,11 +34,28 @@ export async function register(payload: RegisterPayload): Promise<AuthSession> {
 export async function logout(): Promise<void> {
   if (config.useMockApi) {
     await mockAuthStore.logout();
+  } else {
+    try {
+      await apiClient.post('/auth/logout');
+    } catch {
+      // Token may already be invalid/expired server-side — clear it locally regardless.
+    }
   }
   await clearAuthToken();
 }
 
 export async function getSession(): Promise<AuthSession | null> {
   if (config.useMockApi) return mockAuthStore.getSession();
-  return apiClient.get<AuthSession | null>('/auth/me');
+
+  const token = await getAuthToken();
+  if (!token) return null;
+
+  try {
+    const user = await apiClient.get<User>('/auth/me');
+    return { token, user };
+  } catch {
+    // The stored token is missing, expired, or revoked server-side.
+    await clearAuthToken();
+    return null;
+  }
 }

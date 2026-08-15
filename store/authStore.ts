@@ -62,6 +62,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (session) {
         set({ user: session.user, isAuthenticated: true });
       }
+    } catch {
+      // No valid session — the user simply isn't logged in yet.
     } finally {
       set({ hasHydrated: true });
     }

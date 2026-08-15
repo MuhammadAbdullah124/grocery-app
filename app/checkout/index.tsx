@@ -8,8 +8,7 @@ import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Divider } from '@/components/ui/Divider';
 import { useCartStore } from '@/store/cartStore';
-import { useSettingsStore } from '@/store/settingsStore';
-import { useStore } from '@/hooks/useStores';
+import { useSelectedStore } from '@/hooks/useSelectedStore';
 import { useCreateOrder } from '@/hooks/useOrders';
 import { formatPrice } from '@/utils/format';
 import type { PaymentMethod } from '@/types';
@@ -31,8 +30,7 @@ export default function CheckoutScreen() {
   const discount = useCartStore((state) => state.getDiscount());
   const total = useCartStore((state) => state.getTotal());
   const clearCart = useCartStore((state) => state.clearCart);
-  const storeId = useSettingsStore((state) => state.storeId);
-  const { data: store } = useStore(storeId);
+  const { store } = useSelectedStore();
   const createOrder = useCreateOrder();
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
@@ -42,10 +40,14 @@ export default function CheckoutScreen() {
       Alert.alert('No items scanned', 'Scan at least one product before completing the sale.');
       return;
     }
+    if (!store) {
+      Alert.alert('No store selected', 'Please select a store before completing the sale.');
+      return;
+    }
     try {
       const order = await createOrder.mutateAsync({
-        storeId,
-        storeName: store?.name ?? 'FreshCart',
+        storeId: store.id,
+        storeName: store.name,
         items,
         paymentMethod,
       });

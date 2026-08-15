@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Alert, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,7 +11,7 @@ import { SettingsRow } from '@/components/ui/SettingsRow';
 import { StoreSwitcherModal } from '@/components/layout/StoreSwitcherModal';
 import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingsStore';
-import { useStores } from '@/hooks/useStores';
+import { useSelectedStore } from '@/hooks/useSelectedStore';
 import { APP_NAME } from '@/constants/config';
 
 export default function ProfileScreen() {
@@ -29,8 +29,7 @@ export default function ProfileScreen() {
   const storeId = useSettingsStore((state) => state.storeId);
   const setStoreId = useSettingsStore((state) => state.setStoreId);
 
-  const { data: stores } = useStores();
-  const selectedStore = stores?.find((s) => s.id === storeId);
+  const { store: selectedStore, stores } = useSelectedStore();
 
   const [storeModalVisible, setStoreModalVisible] = useState(false);
 
@@ -57,7 +56,11 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
       <StatusBar style="dark" />
-      <View className="flex-1 px-5 pt-3" style={{ gap: 24 }}>
+      <ScrollView
+        className="flex-1 px-5"
+        contentContainerStyle={{ paddingTop: 12, paddingBottom: 32, gap: 24 }}
+        showsVerticalScrollIndicator={false}
+      >
         <Text className="text-2xl font-bold text-gray-900">Profile</Text>
 
         <View className="flex-row items-center rounded-2xl border border-gray-100 p-4">
@@ -72,6 +75,19 @@ export default function ProfileScreen() {
             <Text className="mt-0.5 text-xs text-gray-500" numberOfLines={1}>
               {user?.phone}
             </Text>
+          </View>
+        </View>
+
+        <View>
+          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+            Store Management
+          </Text>
+          <View className="rounded-2xl border border-gray-100">
+            <SettingsRow
+              icon="cube-outline"
+              label="Inventory"
+              onPress={() => router.push('/inventory')}
+            />
           </View>
         </View>
 
@@ -127,11 +143,11 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        <View className="mt-auto pb-4">
+        <View>
           <Button label="Log Out" variant="outline" onPress={handleLogout} />
           <Text className="mt-4 text-center text-xs text-gray-300">{APP_NAME} v1.0.0</Text>
         </View>
-      </View>
+      </ScrollView>
 
       <StoreSwitcherModal
         visible={storeModalVisible}

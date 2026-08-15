@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { Alert, Pressable, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
 import { Screen } from '@/components/layout/Screen';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuthStore } from '@/store/authStore';
 
 export default function LoginScreen() {
-  const router = useRouter();
   const login = useAuthStore((state) => state.login);
   const isLoading = useAuthStore((state) => state.isLoading);
   const error = useAuthStore((state) => state.error);
@@ -61,13 +59,6 @@ export default function LoginScreen() {
 
       <View className="mt-6">
         <Button label="Log In" size="lg" loading={isLoading} onPress={handleLogin} />
-      </View>
-
-      <View className="mt-8 flex-row items-center justify-center">
-        <Text className="text-sm text-gray-500">Don&apos;t have an account? </Text>
-        <Pressable onPress={() => router.push('/(auth)/register')}>
-          <Text className="text-sm font-semibold text-primary-600">Create owner account</Text>
-        </Pressable>
       </View>
     </Screen>
   );

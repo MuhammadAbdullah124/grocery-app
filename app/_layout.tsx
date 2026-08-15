@@ -58,6 +58,7 @@ export default function RootLayout() {
                 <Stack.Screen name="checkout" />
                 <Stack.Screen name="receipt/[id]" />
                 <Stack.Screen name="legal/[slug]" />
+                <Stack.Screen name="inventory" />
               </Stack.Protected>
             </Stack>
           )}
