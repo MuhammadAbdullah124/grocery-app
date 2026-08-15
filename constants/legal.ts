@@ -10,7 +10,7 @@ export const LEGAL_CONTENT: Record<string, LegalContent> = {
       'Need a hand? Here are a few quick answers:',
       'Scan Product — tap the green scan button on any screen to open the camera and scan a barcode.',
       'Current sale not updating — pull down on the Home screen to refresh product data.',
-      'Receipts — every completed sale generates a digital receipt with a QR code you can show or send to the customer.',
+      'Receipts — every completed sale generates a digital receipt that you can print as an invoice for the customer.',
       'For anything else, please contact FreshCart support.',
     ],
   },
@@ -25,8 +25,9 @@ export const LEGAL_CONTENT: Record<string, LegalContent> = {
   privacy: {
     title: 'Privacy Policy',
     body: [
-      'FreshCart stores your staff account details and sales history to provide the point-of-sale experience.',
-      'Digital receipts contain only an order identifier — no payment or personal details are embedded in QR codes.',
+      'FreshCart stores your staff account details (name, email or phone, and role) and sales history to provide the point-of-sale experience.',
+      "Camera access is used only to scan product barcodes and QR codes at checkout and when adding inventory — FreshCart does not store or transmit camera images.",
+      'Receipts can be printed as an invoice; no data is embedded in a scannable code on the receipt.',
       'We do not sell your personal information to third parties.',
     ],
   },

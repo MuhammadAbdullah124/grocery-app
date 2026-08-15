@@ -8,6 +8,10 @@ on:
 jobs:
   build-apk:
     runs-on: ubuntu-latest
+    env:
+      # Read by app.config.js at prebuild time so each build gets a unique,
+      # incrementing android.versionCode instead of staying stuck at 1.
+      ANDROID_VERSION_CODE: ${{ github.run_number }}
 
     steps:
       - name: Checkout
@@ -44,15 +48,15 @@ jobs:
       - name: Generate native Android project
         run: npx expo prebuild --platform android --no-install
 
-      - name: Build debug APK
+      - name: Build preview APK
         working-directory: android
         run: |
           chmod +x ./gradlew
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleRelease --no-daemon
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: freshcart-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: freshcart-preview-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
