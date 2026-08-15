@@ -1,11 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ordersApi } from '@/services/api';
 import type { CreateOrderInput } from '@/services/api/orders';
+import type { OrderDateRange } from '@/types';
 
-export function useOrders() {
+export function useOrders(range?: OrderDateRange) {
   return useQuery({
-    queryKey: ['orders'],
-    queryFn: ordersApi.getOrders,
+    queryKey: ['orders', range?.from ?? null, range?.to ?? null],
+    queryFn: () => ordersApi.getOrders(range),
+  });
+}
+
+export function useSalesSummary() {
+  return useQuery({
+    queryKey: ['orders', 'summary'],
+    queryFn: ordersApi.getSalesSummary,
   });
 }
 

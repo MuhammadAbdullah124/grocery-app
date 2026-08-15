@@ -16,10 +16,10 @@ export const Input = forwardRef<TextInput, InputProps>(
 
     return (
       <View className="w-full">
-        {label ? <Text className="mb-1.5 text-sm font-medium text-gray-700">{label}</Text> : null}
+        {label ? <Text className="mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-200">{label}</Text> : null}
         <View
-          className={`flex-row items-center rounded-2xl border bg-white px-4 h-[52px] ${
-            error ? 'border-red-400' : 'border-gray-200'
+          className={`flex-row items-center rounded-2xl border bg-white dark:bg-gray-900 px-4 h-[52px] ${
+            error ? 'border-red-400 dark:border-red-500' : 'border-gray-200 dark:border-gray-700'
           }`}
         >
           {leftIcon ? (
@@ -27,7 +27,7 @@ export const Input = forwardRef<TextInput, InputProps>(
           ) : null}
           <TextInput
             ref={ref}
-            className={`flex-1 text-base text-gray-900 ${className ?? ''}`}
+            className={`flex-1 text-base text-gray-900 dark:text-gray-50 ${className ?? ''}`}
             placeholderTextColor="#9ca3af"
             secureTextEntry={secure}
             autoCapitalize="none"
@@ -44,7 +44,7 @@ export const Input = forwardRef<TextInput, InputProps>(
             </Pressable>
           ) : null}
         </View>
-        {error ? <Text className="mt-1 text-sm text-red-500">{error}</Text> : null}
+        {error ? <Text className="mt-1 text-sm text-red-500 dark:text-red-400">{error}</Text> : null}
       </View>
     );
   },

@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraPermissionGate } from '@/components/scanner/CameraPermissionGate';
 import { ScannerOverlay } from '@/components/scanner/ScannerOverlay';
 import { useCartStore } from '@/store/cartStore';
+import { parseScannedCode } from '@/utils/scannedCodeParser';
 
 const BARCODE_TYPES = ['ean13', 'ean8', 'upc_a', 'upc_e', 'code128', 'qr'] as const;
 
@@ -27,7 +28,8 @@ export default function ScanScreen() {
     if (hasScannedRef.current) return;
     hasScannedRef.current = true;
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-    router.push({ pathname: '/scan/result', params: { barcode: result.data } });
+    const { barcode } = parseScannedCode(result.data, result.type);
+    router.push({ pathname: '/scan/result', params: { barcode } });
   };
 
   return (
@@ -65,6 +67,15 @@ export default function ScanScreen() {
         </SafeAreaView>
 
         <SafeAreaView className="absolute inset-x-0 bottom-0" edges={['bottom']}>
+          <Pressable
+            onPress={() => router.push('/(tabs)/search')}
+            className="mx-5 mb-3 flex-row items-center justify-center rounded-2xl bg-black/40 py-3"
+            accessibilityRole="button"
+            accessibilityLabel="Add an item without scanning"
+          >
+            <Ionicons name="create-outline" size={18} color="#ffffff" />
+            <Text className="ml-2 text-sm font-semibold text-white">No barcode? Add manually</Text>
+          </Pressable>
           <Pressable
             onPress={() => router.push('/cart')}
             className="mx-5 mb-4 flex-row items-center justify-center rounded-2xl bg-white/95 py-3.5"

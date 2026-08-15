@@ -21,3 +21,25 @@ export interface Order {
   status: OrderStatus;
   createdAt: string;
 }
+
+export interface SalesSummaryTotals {
+  revenue: number;
+  orders: number;
+}
+
+export interface SalesSummarySeriesPoint {
+  date: string;
+  revenue: number;
+}
+
+export interface SalesSummary {
+  today: SalesSummaryTotals;
+  week: SalesSummaryTotals;
+  month: SalesSummaryTotals;
+  series: SalesSummarySeriesPoint[];
+}
+
+export interface OrderDateRange {
+  from?: string;
+  to?: string;
+}

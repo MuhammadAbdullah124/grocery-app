@@ -25,32 +25,32 @@ function ProductListItemBase({ product }: ProductListItemProps) {
   return (
     <Pressable
       onPress={() => router.push(`/product/${product.id}`)}
-      className="flex-row items-center rounded-2xl border border-gray-100 bg-white p-3"
+      className="flex-row items-center rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-3"
       style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}
     >
-      <View className="h-16 w-16 overflow-hidden rounded-xl bg-gray-50">
+      <View className="h-16 w-16 overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-800">
         <Image source={{ uri: product.image }} style={{ width: '100%', height: '100%' }} contentFit="cover" />
       </View>
 
       <View className="ml-3 flex-1">
-        <Text className="text-sm font-medium text-gray-900" numberOfLines={1}>
+        <Text className="text-sm font-medium text-gray-900 dark:text-gray-50" numberOfLines={1}>
           {product.name}
         </Text>
-        <Text className="mt-0.5 text-xs text-gray-400" numberOfLines={1}>
+        <Text className="mt-0.5 text-xs text-gray-400 dark:text-gray-500" numberOfLines={1}>
           {product.brand} · {formatUnit(product.unit)}
         </Text>
         <View className="mt-1 flex-row items-center gap-2">
-          <Text className="text-sm font-bold text-gray-900">
+          <Text className="text-sm font-bold text-gray-900 dark:text-gray-50">
             {formatPrice(hasDiscount ? (product.discountPrice as number) : product.price)}
           </Text>
           {hasDiscount ? (
-            <Text className="text-xs text-gray-400 line-through">{formatPrice(product.price)}</Text>
+            <Text className="text-xs text-gray-400 dark:text-gray-500 line-through">{formatPrice(product.price)}</Text>
           ) : null}
         </View>
       </View>
 
       {outOfStock ? (
-        <Text className="text-xs font-semibold text-gray-400">Out of stock</Text>
+        <Text className="text-xs font-semibold text-gray-400 dark:text-gray-500">Out of stock</Text>
       ) : quantity > 0 ? (
         <QuantitySelector
           size="sm"

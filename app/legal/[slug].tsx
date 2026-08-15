@@ -10,7 +10,7 @@ export default function LegalScreen() {
   const content = LEGAL_CONTENT[slug ?? ''] ?? { title: 'Information', body: ['Content not available.'] };
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
       <Header title={content.title} />
       <ScrollView
@@ -19,7 +19,7 @@ export default function LegalScreen() {
         contentContainerStyle={{ paddingBottom: 32 }}
       >
         {content.body.map((paragraph, index) => (
-          <Text key={index} className="mb-3 text-sm leading-6 text-gray-600">
+          <Text key={index} className="mb-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
             {paragraph}
           </Text>
         ))}

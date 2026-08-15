@@ -16,6 +16,7 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { QuantitySelector } from '@/components/product/QuantitySelector';
 import { useProduct } from '@/hooks/useProducts';
 import { useCartStore } from '@/store/cartStore';
+import { useIconColor } from '@/hooks/useIconColor';
 import { formatPrice, formatUnit } from '@/utils/format';
 import { categoryMeta } from '@/constants/theme';
 
@@ -26,10 +27,11 @@ export default function ProductDetailsScreen() {
   const addItem = useCartStore((state) => state.addItem);
   const cartCount = useCartStore((state) => state.getItemCount());
   const [quantity, setQuantity] = useState(1);
+  const iconColor = useIconColor();
 
   if (productQuery.isLoading) {
     return (
-      <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+      <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
         <StatusBar style="dark" />
         <View className="px-5 pt-3">
           <Skeleton height={280} radius={24} />
@@ -43,16 +45,16 @@ export default function ProductDetailsScreen() {
 
   if (productQuery.isError || !productQuery.data) {
     return (
-      <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+      <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
         <StatusBar style="dark" />
         <View className="flex-row items-center px-5 pt-3">
           <Pressable
             onPress={() => router.back()}
-            className="h-10 w-10 items-center justify-center rounded-full bg-gray-100"
+            className="h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
             accessibilityRole="button"
             accessibilityLabel="Go back"
           >
-            <Ionicons name="chevron-back" size={22} color="#111827" />
+            <Ionicons name="chevron-back" size={22} color={iconColor} />
           </Pressable>
         </View>
         <ErrorState
@@ -77,26 +79,26 @@ export default function ProductDetailsScreen() {
   };
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="px-5 pt-3">
           <View className="flex-row items-center justify-between">
             <Pressable
               onPress={() => router.back()}
-              className="h-10 w-10 items-center justify-center rounded-full bg-gray-100"
+              className="h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
               accessibilityRole="button"
               accessibilityLabel="Go back"
             >
-              <Ionicons name="chevron-back" size={22} color="#111827" />
+              <Ionicons name="chevron-back" size={22} color={iconColor} />
             </Pressable>
             <Pressable
               onPress={() => router.push('/cart')}
-              className="h-10 w-10 items-center justify-center rounded-full bg-gray-100"
+              className="h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
               accessibilityRole="button"
               accessibilityLabel="View cart"
             >
-              <Ionicons name="cart-outline" size={20} color="#111827" />
+              <Ionicons name="cart-outline" size={20} color={iconColor} />
               {cartCount > 0 ? (
                 <View className="absolute -right-1 -top-1 h-4 w-4 items-center justify-center rounded-full bg-primary-500">
                   <Text className="text-[10px] font-bold text-white">{cartCount}</Text>
@@ -105,7 +107,7 @@ export default function ProductDetailsScreen() {
             </Pressable>
           </View>
 
-          <View className="mt-4 aspect-square w-full overflow-hidden rounded-3xl bg-gray-50">
+          <View className="mt-4 aspect-square w-full overflow-hidden rounded-3xl bg-gray-50 dark:bg-gray-800">
             <Image source={{ uri: product.image }} style={{ width: '100%', height: '100%' }} contentFit="cover" />
           </View>
 
@@ -114,16 +116,16 @@ export default function ProductDetailsScreen() {
             <Badge label={outOfStock ? 'Out of stock' : 'Available'} variant={outOfStock ? 'danger' : 'success'} />
           </View>
 
-          <Text className="mt-3 text-2xl font-bold text-gray-900">{product.name}</Text>
-          <Text className="mt-1 text-sm text-gray-500">
+          <Text className="mt-3 text-2xl font-bold text-gray-900 dark:text-gray-50">{product.name}</Text>
+          <Text className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             {product.brand} · {formatUnit(product.unit)}
           </Text>
 
           <View className="mt-3 flex-row items-center gap-3">
-            <Text className="text-2xl font-bold text-primary-600">{formatPrice(unitPrice)}</Text>
+            <Text className="text-2xl font-bold text-primary-600 dark:text-primary-400">{formatPrice(unitPrice)}</Text>
             {hasDiscount ? (
               <>
-                <Text className="text-base text-gray-400 line-through">{formatPrice(product.price)}</Text>
+                <Text className="text-base text-gray-400 dark:text-gray-500 line-through">{formatPrice(product.price)}</Text>
                 <Badge label={`${product.discountPercentage}% OFF`} variant="danger" />
               </>
             ) : null}
@@ -131,18 +133,20 @@ export default function ProductDetailsScreen() {
 
           <Divider className="my-5" />
 
-          <Text className="text-base font-bold text-gray-900">Description</Text>
-          <Text className="mt-2 text-sm leading-6 text-gray-500">{product.description}</Text>
+          <Text className="text-base font-bold text-gray-900 dark:text-gray-50">Description</Text>
+          <Text className="mt-2 text-sm leading-6 text-gray-500 dark:text-gray-400">{product.description}</Text>
 
           <Divider className="my-5" />
 
-          <View className="flex-row items-center justify-between">
-            <Text className="text-sm text-gray-500">Barcode</Text>
-            <Text className="text-sm font-medium text-gray-900">{product.barcode}</Text>
-          </View>
+          {product.barcode ? (
+            <View className="flex-row items-center justify-between">
+              <Text className="text-sm text-gray-500 dark:text-gray-400">Barcode</Text>
+              <Text className="text-sm font-medium text-gray-900 dark:text-gray-50">{product.barcode}</Text>
+            </View>
+          ) : null}
           <View className="mt-3 flex-row items-center justify-between">
-            <Text className="text-sm text-gray-500">Stock</Text>
-            <Text className="text-sm font-medium text-gray-900">
+            <Text className="text-sm text-gray-500 dark:text-gray-400">Stock</Text>
+            <Text className="text-sm font-medium text-gray-900 dark:text-gray-50">
               {outOfStock ? 'Out of stock' : `${product.stock} ${formatUnit(product.unit)} available`}
             </Text>
           </View>
@@ -152,7 +156,7 @@ export default function ProductDetailsScreen() {
       </ScrollView>
 
       {!outOfStock ? (
-        <View className="border-t border-gray-100 bg-white px-5 pb-2 pt-4">
+        <View className="border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 px-5 pb-2 pt-4">
           <View className="flex-row items-center justify-between">
             <QuantitySelector
               quantity={quantity}
@@ -160,14 +164,14 @@ export default function ProductDetailsScreen() {
               onDecrease={() => setQuantity((q) => Math.max(q - 1, 1))}
               max={product.stock}
             />
-            <Text className="text-lg font-bold text-gray-900">{formatPrice(unitPrice * quantity)}</Text>
+            <Text className="text-lg font-bold text-gray-900 dark:text-gray-50">{formatPrice(unitPrice * quantity)}</Text>
           </View>
           <View className="mt-3">
             <Button label="Add to Cart" size="lg" onPress={handleAddToCart} leftIcon="cart-outline" />
           </View>
         </View>
       ) : (
-        <View className="border-t border-gray-100 bg-white px-5 py-4">
+        <View className="border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 px-5 py-4">
           <Button label="Out of Stock" size="lg" disabled onPress={() => {}} />
         </View>
       )}

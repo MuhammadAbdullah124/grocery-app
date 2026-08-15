@@ -18,7 +18,7 @@ interface ButtonProps extends Omit<PressableProps, 'children'> {
 
 const containerVariantClasses: Record<ButtonVariant, string> = {
   primary: 'bg-primary-500',
-  secondary: 'bg-primary-100',
+  secondary: 'bg-primary-100 dark:bg-primary-800',
   outline: 'bg-transparent border-2 border-primary-500',
   ghost: 'bg-transparent',
   danger: 'bg-red-600',
@@ -26,9 +26,9 @@ const containerVariantClasses: Record<ButtonVariant, string> = {
 
 const textVariantClasses: Record<ButtonVariant, string> = {
   primary: 'text-white',
-  secondary: 'text-primary-700',
-  outline: 'text-primary-600',
-  ghost: 'text-primary-600',
+  secondary: 'text-primary-700 dark:text-primary-300',
+  outline: 'text-primary-600 dark:text-primary-400',
+  ghost: 'text-primary-600 dark:text-primary-400',
   danger: 'text-white',
 };
 

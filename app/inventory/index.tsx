@@ -26,12 +26,12 @@ export default function InventoryScreen() {
       (p) =>
         p.name.toLowerCase().includes(term) ||
         p.brand.toLowerCase().includes(term) ||
-        p.barcode.includes(term),
+        (p.barcode?.includes(term) ?? false),
     );
   }, [productsQuery.data, query]);
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
       <Header
         title="Inventory"
@@ -82,24 +82,25 @@ export default function InventoryScreen() {
           renderItem={({ item }) => (
             <Pressable
               onPress={() => router.push(`/inventory/${item.id}`)}
-              className="flex-row items-center rounded-2xl border border-gray-100 bg-white p-3"
+              className="flex-row items-center rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-3"
               style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}
             >
-              <View className="h-14 w-14 overflow-hidden rounded-xl bg-gray-50">
+              <View className="h-14 w-14 overflow-hidden rounded-xl bg-gray-50 dark:bg-gray-800">
                 <Image source={{ uri: item.image }} style={{ width: '100%', height: '100%' }} contentFit="cover" />
               </View>
               <View className="ml-3 flex-1">
-                <Text className="text-sm font-medium text-gray-900" numberOfLines={1}>
+                <Text className="text-sm font-medium text-gray-900 dark:text-gray-50" numberOfLines={1}>
                   {item.name}
                 </Text>
-                <Text className="mt-0.5 text-xs text-gray-400" numberOfLines={1}>
-                  {item.brand} · {item.barcode}
+                <Text className="mt-0.5 text-xs text-gray-400 dark:text-gray-500" numberOfLines={1}>
+                  {item.brand}
+                  {item.barcode ? ` · ${item.barcode}` : ''}
                 </Text>
                 <View className="mt-1 flex-row items-center gap-2">
-                  <Text className="text-sm font-bold text-gray-900">
+                  <Text className="text-sm font-bold text-gray-900 dark:text-gray-50">
                     {formatPrice(item.discountPrice ?? item.price)}
                   </Text>
-                  <Text className="text-xs text-gray-400">
+                  <Text className="text-xs text-gray-400 dark:text-gray-500">
                     Stock: {item.stock} {formatUnit(item.unit)}
                   </Text>
                 </View>

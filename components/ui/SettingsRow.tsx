@@ -12,10 +12,10 @@ interface SettingsRowProps {
 export function SettingsRow({ icon, label, value, onPress, toggle }: SettingsRowProps) {
   const content = (
     <View className="flex-row items-center px-4 py-3.5">
-      <View className="h-9 w-9 items-center justify-center rounded-full bg-gray-100">
+      <View className="h-9 w-9 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
         <Ionicons name={icon} size={18} color="#374151" />
       </View>
-      <Text className="ml-3 flex-1 text-sm font-medium text-gray-900">{label}</Text>
+      <Text className="ml-3 flex-1 text-sm font-medium text-gray-900 dark:text-gray-50">{label}</Text>
       {toggle ? (
         <Switch
           value={toggle.value}
@@ -25,7 +25,7 @@ export function SettingsRow({ icon, label, value, onPress, toggle }: SettingsRow
         />
       ) : (
         <View className="flex-row items-center">
-          {value ? <Text className="mr-2 text-sm text-gray-400">{value}</Text> : null}
+          {value ? <Text className="mr-2 text-sm text-gray-400 dark:text-gray-500">{value}</Text> : null}
           {onPress ? <Ionicons name="chevron-forward" size={18} color="#9ca3af" /> : null}
         </View>
       )}

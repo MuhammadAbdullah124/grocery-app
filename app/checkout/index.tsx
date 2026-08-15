@@ -59,18 +59,18 @@ export default function CheckoutScreen() {
   };
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
       <Header title="Checkout" />
       <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
-        <Text className="text-base font-bold text-gray-900">Sale Summary</Text>
+        <Text className="text-base font-bold text-gray-900 dark:text-gray-50">Sale Summary</Text>
         <View className="mt-3 gap-3">
           {items.map((item) => (
             <View key={item.productId} className="flex-row items-center justify-between">
-              <Text className="mr-2 flex-1 text-sm text-gray-600" numberOfLines={1}>
+              <Text className="mr-2 flex-1 text-sm text-gray-600 dark:text-gray-300" numberOfLines={1}>
                 {item.quantity} x {item.name}
               </Text>
-              <Text className="text-sm font-medium text-gray-900">
+              <Text className="text-sm font-medium text-gray-900 dark:text-gray-50">
                 {formatPrice((item.discountPrice ?? item.price) * item.quantity)}
               </Text>
             </View>
@@ -81,24 +81,24 @@ export default function CheckoutScreen() {
 
         <View className="gap-2">
           <View className="flex-row justify-between">
-            <Text className="text-sm text-gray-500">Subtotal</Text>
-            <Text className="text-sm text-gray-900">{formatPrice(subtotal)}</Text>
+            <Text className="text-sm text-gray-500 dark:text-gray-400">Subtotal</Text>
+            <Text className="text-sm text-gray-900 dark:text-gray-50">{formatPrice(subtotal)}</Text>
           </View>
           {discount > 0 ? (
             <View className="flex-row justify-between">
-              <Text className="text-sm text-gray-500">Discount</Text>
-              <Text className="text-sm text-primary-600">-{formatPrice(discount)}</Text>
+              <Text className="text-sm text-gray-500 dark:text-gray-400">Discount</Text>
+              <Text className="text-sm text-primary-600 dark:text-primary-400">-{formatPrice(discount)}</Text>
             </View>
           ) : null}
           <View className="flex-row justify-between">
-            <Text className="text-base font-bold text-gray-900">Total</Text>
-            <Text className="text-base font-bold text-gray-900">{formatPrice(total)}</Text>
+            <Text className="text-base font-bold text-gray-900 dark:text-gray-50">Total</Text>
+            <Text className="text-base font-bold text-gray-900 dark:text-gray-50">{formatPrice(total)}</Text>
           </View>
         </View>
 
         <Divider className="my-5" />
 
-        <Text className="text-base font-bold text-gray-900">Payment</Text>
+        <Text className="text-base font-bold text-gray-900 dark:text-gray-50">Payment</Text>
         <View className="mt-3 gap-3 pb-6">
           {PAYMENT_OPTIONS.map((option) => {
             const selected = paymentMethod === option.id;
@@ -107,19 +107,19 @@ export default function CheckoutScreen() {
                 key={option.id}
                 onPress={() => setPaymentMethod(option.id)}
                 className={`flex-row items-center rounded-2xl border p-4 ${
-                  selected ? 'border-primary-500 bg-primary-50' : 'border-gray-100'
+                  selected ? 'border-primary-500 bg-primary-50 dark:bg-primary-900' : 'border-gray-100 dark:border-gray-800'
                 }`}
               >
                 <View
                   className={`h-11 w-11 items-center justify-center rounded-full ${
-                    selected ? 'bg-primary-500' : 'bg-gray-100'
+                    selected ? 'bg-primary-500' : 'bg-gray-100 dark:bg-gray-800'
                   }`}
                 >
                   <Ionicons name={option.icon} size={20} color={selected ? '#ffffff' : '#6b7280'} />
                 </View>
                 <View className="ml-3 flex-1">
-                  <Text className="text-sm font-semibold text-gray-900">{option.label}</Text>
-                  <Text className="text-xs text-gray-500">{option.description}</Text>
+                  <Text className="text-sm font-semibold text-gray-900 dark:text-gray-50">{option.label}</Text>
+                  <Text className="text-xs text-gray-500 dark:text-gray-400">{option.description}</Text>
                 </View>
                 <Ionicons
                   name={selected ? 'radio-button-on' : 'radio-button-off'}
@@ -132,7 +132,7 @@ export default function CheckoutScreen() {
         </View>
       </ScrollView>
 
-      <View className="border-t border-gray-100 px-5 pb-2 pt-4">
+      <View className="border-t border-gray-100 dark:border-gray-800 px-5 pb-2 pt-4">
         <Button
           label="Complete Sale"
           size="lg"

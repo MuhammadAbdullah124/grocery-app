@@ -25,10 +25,10 @@ function ProductCardBase({ product }: ProductCardProps) {
   return (
     <Pressable
       onPress={() => router.push(`/product/${product.id}`)}
-      className="w-full overflow-hidden rounded-2xl border border-gray-100 bg-white"
+      className="w-full overflow-hidden rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900"
       style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}
     >
-      <View className="aspect-square w-full bg-gray-50">
+      <View className="aspect-square w-full bg-gray-50 dark:bg-gray-800">
         <Image
           source={{ uri: product.image }}
           style={{ width: '100%', height: '100%' }}
@@ -41,17 +41,17 @@ function ProductCardBase({ product }: ProductCardProps) {
           </View>
         ) : null}
         {outOfStock ? (
-          <View className="absolute inset-0 items-center justify-center bg-white/70">
-            <Text className="text-xs font-semibold text-gray-600">Out of stock</Text>
+          <View className="absolute inset-0 items-center justify-center bg-white/70 dark:bg-gray-900/70">
+            <Text className="text-xs font-semibold text-gray-600 dark:text-gray-300">Out of stock</Text>
           </View>
         ) : null}
       </View>
 
       <View className="p-3">
-        <Text className="text-sm font-medium text-gray-900" numberOfLines={1}>
+        <Text className="text-sm font-medium text-gray-900 dark:text-gray-50" numberOfLines={1}>
           {product.name}
         </Text>
-        <Text className="mt-0.5 text-xs text-gray-400" numberOfLines={1}>
+        <Text className="mt-0.5 text-xs text-gray-400 dark:text-gray-500" numberOfLines={1}>
           {product.brand} · {formatUnit(product.unit)}
         </Text>
 
@@ -59,13 +59,13 @@ function ProductCardBase({ product }: ProductCardProps) {
           <View>
             {hasDiscount ? (
               <View className="flex-row items-center gap-1.5">
-                <Text className="text-sm font-bold text-gray-900">{formatPrice(product.discountPrice as number)}</Text>
+                <Text className="text-sm font-bold text-gray-900 dark:text-gray-50">{formatPrice(product.discountPrice as number)}</Text>
               </View>
             ) : (
-              <Text className="text-sm font-bold text-gray-900">{formatPrice(product.price)}</Text>
+              <Text className="text-sm font-bold text-gray-900 dark:text-gray-50">{formatPrice(product.price)}</Text>
             )}
             {hasDiscount ? (
-              <Text className="text-xs text-gray-400 line-through">{formatPrice(product.price)}</Text>
+              <Text className="text-xs text-gray-400 dark:text-gray-500 line-through">{formatPrice(product.price)}</Text>
             ) : null}
           </View>
 

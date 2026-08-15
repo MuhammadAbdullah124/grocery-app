@@ -9,7 +9,7 @@ interface CardProps extends ViewProps {
 export function Card({ children, padded = true, className, ...viewProps }: CardProps) {
   return (
     <View
-      className={`rounded-2xl border border-gray-100 bg-white ${padded ? 'p-4' : ''} ${className ?? ''}`}
+      className={`rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 ${padded ? 'p-4' : ''} ${className ?? ''}`}
       style={{
         shadowColor: '#000',
         shadowOpacity: 0.04,

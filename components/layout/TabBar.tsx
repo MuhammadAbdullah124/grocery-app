@@ -7,14 +7,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
   index: 'home',
   search: 'search',
-  orders: 'receipt',
+  orders: 'stats-chart',
   profile: 'person',
 };
 
 const labels: Record<string, string> = {
   index: 'Home',
   search: 'Search',
-  orders: 'Sales',
+  orders: 'Accounting',
   profile: 'Profile',
 };
 
@@ -48,7 +48,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
         className="flex-1 items-center justify-center py-2"
       >
         <Ionicons name={icon} size={22} color={isFocused ? '#1db567' : '#9ca3af'} />
-        <Text className={`mt-1 text-xs ${isFocused ? 'font-semibold text-primary-600' : 'text-gray-400'}`}>
+        <Text className={`mt-1 text-xs ${isFocused ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500'}`}>
           {label}
         </Text>
       </Pressable>
@@ -56,7 +56,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
   };
 
   return (
-    <View style={{ paddingBottom: insets.bottom }} className="border-t border-gray-100 bg-white">
+    <View style={{ paddingBottom: insets.bottom }} className="border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
       <View className="flex-row items-center">
         {leftRoutes.map(renderTab)}
         <View style={{ width: 76 }} />

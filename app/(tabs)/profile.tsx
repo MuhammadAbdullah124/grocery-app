@@ -54,35 +54,35 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
       <ScrollView
         className="flex-1 px-5"
         contentContainerStyle={{ paddingTop: 12, paddingBottom: 32, gap: 24 }}
         showsVerticalScrollIndicator={false}
       >
-        <Text className="text-2xl font-bold text-gray-900">Profile</Text>
+        <Text className="text-2xl font-bold text-gray-900 dark:text-gray-50">Profile</Text>
 
-        <View className="flex-row items-center rounded-2xl border border-gray-100 p-4">
+        <View className="flex-row items-center rounded-2xl border border-gray-100 dark:border-gray-800 p-4">
           <Avatar name={user?.name ?? 'Guest'} uri={user?.avatar} size={56} />
           <View className="ml-4 flex-1">
-            <Text className="text-base font-bold text-gray-900" numberOfLines={1}>
+            <Text className="text-base font-bold text-gray-900 dark:text-gray-50" numberOfLines={1}>
               {user?.name ?? 'Guest'}
             </Text>
-            <Text className="mt-0.5 text-xs text-gray-500" numberOfLines={1}>
+            <Text className="mt-0.5 text-xs text-gray-500 dark:text-gray-400" numberOfLines={1}>
               {user?.email}
             </Text>
-            <Text className="mt-0.5 text-xs text-gray-500" numberOfLines={1}>
+            <Text className="mt-0.5 text-xs text-gray-500 dark:text-gray-400" numberOfLines={1}>
               {user?.phone}
             </Text>
           </View>
         </View>
 
         <View>
-          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
             Store Management
           </Text>
-          <View className="rounded-2xl border border-gray-100">
+          <View className="rounded-2xl border border-gray-100 dark:border-gray-800">
             <SettingsRow
               icon="cube-outline"
               label="Inventory"
@@ -92,10 +92,10 @@ export default function ProfileScreen() {
         </View>
 
         <View>
-          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
             Preferences
           </Text>
-          <View className="rounded-2xl border border-gray-100">
+          <View className="rounded-2xl border border-gray-100 dark:border-gray-800">
             <SettingsRow
               icon="notifications-outline"
               label="Notifications"
@@ -125,8 +125,8 @@ export default function ProfileScreen() {
         </View>
 
         <View>
-          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">Support</Text>
-          <View className="rounded-2xl border border-gray-100">
+          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">Support</Text>
+          <View className="rounded-2xl border border-gray-100 dark:border-gray-800">
             <SettingsRow icon="help-circle-outline" label="Help" onPress={() => router.push('/legal/help')} />
             <Divider />
             <SettingsRow
@@ -145,7 +145,7 @@ export default function ProfileScreen() {
 
         <View>
           <Button label="Log Out" variant="outline" onPress={handleLogout} />
-          <Text className="mt-4 text-center text-xs text-gray-300">{APP_NAME} v1.0.0</Text>
+          <Text className="mt-4 text-center text-xs text-gray-300 dark:text-gray-600">{APP_NAME} v1.0.0</Text>
         </View>
       </ScrollView>
 

@@ -22,20 +22,20 @@ export function ProductScannerResultFound({ product, onAddToCart, onScanAnother 
   return (
     <View className="px-5 pb-2 pt-1">
       <View className="items-center">
-        <View className="h-28 w-28 overflow-hidden rounded-2xl bg-gray-50">
+        <View className="h-28 w-28 overflow-hidden rounded-2xl bg-gray-50 dark:bg-gray-800">
           <Image source={{ uri: product.image }} style={{ width: '100%', height: '100%' }} contentFit="cover" />
         </View>
-        <Text className="mt-3 text-lg font-bold text-gray-900">{product.name}</Text>
-        <Text className="text-sm text-gray-400">
+        <Text className="mt-3 text-lg font-bold text-gray-900 dark:text-gray-50">{product.name}</Text>
+        <Text className="text-sm text-gray-400 dark:text-gray-500">
           {product.brand} · {formatUnit(product.unit)}
         </Text>
 
         <View className="mt-2 flex-row items-center gap-2">
-          <Text className="text-xl font-bold text-primary-600">
+          <Text className="text-xl font-bold text-primary-600 dark:text-primary-400">
             {formatPrice(hasDiscount ? (product.discountPrice as number) : product.price)}
           </Text>
           {hasDiscount ? (
-            <Text className="text-sm text-gray-400 line-through">{formatPrice(product.price)}</Text>
+            <Text className="text-sm text-gray-400 dark:text-gray-500 line-through">{formatPrice(product.price)}</Text>
           ) : null}
         </View>
 
@@ -80,11 +80,11 @@ interface NotFoundProps {
 export function ProductScannerResultNotFound({ barcode, onTryAgain, onSearchManually }: NotFoundProps) {
   return (
     <View className="items-center px-5 pb-2 pt-1">
-      <View className="h-20 w-20 items-center justify-center rounded-full bg-amber-50">
+      <View className="h-20 w-20 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-900">
         <Ionicons name="barcode-outline" size={36} color="#d97706" />
       </View>
-      <Text className="mt-4 text-lg font-bold text-gray-900">Product not found</Text>
-      <Text className="mt-1 text-center text-sm text-gray-500">
+      <Text className="mt-4 text-lg font-bold text-gray-900 dark:text-gray-50">Product not found</Text>
+      <Text className="mt-1 text-center text-sm text-gray-500 dark:text-gray-400">
         We couldn't find a product for barcode {barcode}. Try scanning again or search for it manually.
       </Text>
 

@@ -15,12 +15,12 @@ interface EmptyStateProps {
 export function EmptyState({ icon = 'basket-outline', title, description, actionLabel, onAction, children }: EmptyStateProps) {
   return (
     <View className="flex-1 items-center justify-center px-8 py-12">
-      <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-primary-50">
+      <View className="mb-4 h-20 w-20 items-center justify-center rounded-full bg-primary-50 dark:bg-primary-900">
         <Ionicons name={icon} size={36} color="#1db567" />
       </View>
-      <Text className="text-center text-lg font-semibold text-gray-900">{title}</Text>
+      <Text className="text-center text-lg font-semibold text-gray-900 dark:text-gray-50">{title}</Text>
       {description ? (
-        <Text className="mt-1.5 text-center text-sm text-gray-500">{description}</Text>
+        <Text className="mt-1.5 text-center text-sm text-gray-500 dark:text-gray-400">{description}</Text>
       ) : null}
       {actionLabel && onAction ? (
         <View className="mt-6 w-full max-w-xs">

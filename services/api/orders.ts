@@ -1,6 +1,6 @@
 import { config } from '@/constants/config';
 import { ApiRequestError } from '@/types';
-import type { CartItem, Order, OrderItem, PaymentMethod } from '@/types';
+import type { CartItem, Order, OrderDateRange, OrderItem, PaymentMethod, SalesSummary } from '@/types';
 import { apiClient } from './client';
 import * as mockOrderStore from '@/services/mock/orderStore';
 import { generateId, generateOrderNumber } from '@/utils/id';
@@ -51,9 +51,9 @@ export async function createOrder(input: CreateOrderInput): Promise<Order> {
   return apiClient.post<Order>('/orders', input);
 }
 
-export async function getOrders(): Promise<Order[]> {
-  if (config.useMockApi) return mockOrderStore.getOrders();
-  return apiClient.get<Order[]>('/orders');
+export async function getOrders(range?: OrderDateRange): Promise<Order[]> {
+  if (config.useMockApi) return mockOrderStore.getOrders(range);
+  return apiClient.get<Order[]>('/orders', { from: range?.from, to: range?.to });
 }
 
 export async function getOrder(id: string): Promise<Order> {
@@ -63,4 +63,9 @@ export async function getOrder(id: string): Promise<Order> {
     return order;
   }
   return apiClient.get<Order>(`/orders/${id}`);
+}
+
+export async function getSalesSummary(): Promise<SalesSummary> {
+  if (config.useMockApi) return mockOrderStore.getSalesSummary();
+  return apiClient.get<SalesSummary>('/orders/summary');
 }

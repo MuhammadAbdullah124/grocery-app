@@ -21,19 +21,19 @@ function OrderCardBase({ order }: OrderCardProps) {
   return (
     <Pressable
       onPress={() => router.push(`/receipt/${order.id}`)}
-      className="rounded-2xl border border-gray-100 bg-white p-4"
+      className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-4"
       style={({ pressed }) => [{ opacity: pressed ? 0.9 : 1 }]}
     >
       <View className="flex-row items-center justify-between">
-        <Text className="text-sm font-bold text-gray-900">{order.orderNumber}</Text>
+        <Text className="text-sm font-bold text-gray-900 dark:text-gray-50">{order.orderNumber}</Text>
         <Badge label={paymentLabel[order.paymentMethod]} variant="neutral" />
       </View>
-      <Text className="mt-1 text-xs text-gray-400">{formatDate(order.createdAt)}</Text>
+      <Text className="mt-1 text-xs text-gray-400 dark:text-gray-500">{formatDate(order.createdAt)}</Text>
       <View className="mt-3 flex-row items-center justify-between">
-        <Text className="text-sm text-gray-500">
+        <Text className="text-sm text-gray-500 dark:text-gray-400">
           {itemCount} {itemCount === 1 ? 'item' : 'items'}
         </Text>
-        <Text className="text-base font-bold text-gray-900">{formatPrice(order.total)}</Text>
+        <Text className="text-base font-bold text-gray-900 dark:text-gray-50">{formatPrice(order.total)}</Text>
       </View>
     </Pressable>
   );

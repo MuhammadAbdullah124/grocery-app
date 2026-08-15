@@ -27,10 +27,10 @@ export function Avatar({ name, uri, size = 44 }: AvatarProps) {
 
   return (
     <View
-      className="items-center justify-center bg-primary-100"
+      className="items-center justify-center bg-primary-100 dark:bg-primary-800"
       style={{ width: size, height: size, borderRadius: size / 2 }}
     >
-      <Text className="font-semibold text-primary-700" style={{ fontSize: size * 0.4 }}>
+      <Text className="font-semibold text-primary-700 dark:text-primary-300" style={{ fontSize: size * 0.4 }}>
         {initialsFor(name)}
       </Text>
     </View>

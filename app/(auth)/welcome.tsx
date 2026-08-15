@@ -15,8 +15,8 @@ export default function WelcomeScreen() {
           <View className="h-24 w-24 items-center justify-center rounded-3xl bg-primary-500">
             <Ionicons name="basket" size={48} color="#ffffff" />
           </View>
-          <Text className="mt-6 text-3xl font-bold text-gray-900">{APP_NAME}</Text>
-          <Text className="mt-3 max-w-xs text-center text-base leading-6 text-gray-500">
+          <Text className="mt-6 text-3xl font-bold text-gray-900 dark:text-gray-50">{APP_NAME}</Text>
+          <Text className="mt-3 max-w-xs text-center text-base leading-6 text-gray-500 dark:text-gray-400">
             {APP_DESCRIPTION}
           </Text>
         </View>
@@ -24,22 +24,22 @@ export default function WelcomeScreen() {
         <View className="w-full gap-3">
           <View className="flex-row items-center justify-center gap-8 pb-4">
             <View className="items-center gap-2">
-              <View className="h-12 w-12 items-center justify-center rounded-2xl bg-primary-50">
+              <View className="h-12 w-12 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-900">
                 <Ionicons name="scan-outline" size={22} color="#129253" />
               </View>
-              <Text className="text-xs text-gray-500">Scan</Text>
+              <Text className="text-xs text-gray-500 dark:text-gray-400">Scan</Text>
             </View>
             <View className="items-center gap-2">
-              <View className="h-12 w-12 items-center justify-center rounded-2xl bg-primary-50">
+              <View className="h-12 w-12 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-900">
                 <Ionicons name="cart-outline" size={22} color="#129253" />
               </View>
-              <Text className="text-xs text-gray-500">Total</Text>
+              <Text className="text-xs text-gray-500 dark:text-gray-400">Total</Text>
             </View>
             <View className="items-center gap-2">
-              <View className="h-12 w-12 items-center justify-center rounded-2xl bg-primary-50">
+              <View className="h-12 w-12 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-900">
                 <Ionicons name="qr-code-outline" size={22} color="#129253" />
               </View>
-              <Text className="text-xs text-gray-500">Receipt</Text>
+              <Text className="text-xs text-gray-500 dark:text-gray-400">Receipt</Text>
             </View>
           </View>
           <Button label="Continue" size="lg" onPress={() => router.push('/(auth)/login')} />

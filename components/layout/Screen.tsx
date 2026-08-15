@@ -21,7 +21,7 @@ export function Screen({
   scrollProps,
 }: ScreenProps) {
   return (
-    <SafeAreaView edges={edges} className={`flex-1 bg-white ${className ?? ''}`}>
+    <SafeAreaView edges={edges} className={`flex-1 bg-white dark:bg-black ${className ?? ''}`}>
       <StatusBar style="dark" />
       {scroll ? (
         <ScrollView

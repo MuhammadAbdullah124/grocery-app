@@ -25,7 +25,7 @@ async function writeProducts(products: Product[]): Promise<void> {
 function toProduct(id: string, input: ProductInput): Product {
   return {
     id,
-    barcode: input.barcode,
+    barcode: input.barcode?.trim() || null,
     name: input.name,
     brand: input.brand,
     description: input.description,
@@ -45,7 +45,7 @@ export async function getAllProducts(): Promise<Product[]> {
 
 export async function createProduct(input: ProductInput): Promise<Product> {
   const products = await readProducts();
-  if (products.some((p) => p.barcode === input.barcode)) {
+  if (input.barcode?.trim() && products.some((p) => p.barcode === input.barcode?.trim())) {
     throw new ApiRequestError('A product with this barcode already exists.', 'DUPLICATE_BARCODE');
   }
 
@@ -60,7 +60,7 @@ export async function updateProduct(id: string, input: ProductInput): Promise<Pr
   if (index === -1) {
     throw new ApiRequestError('Product not found', 'NOT_FOUND');
   }
-  if (products.some((p) => p.barcode === input.barcode && p.id !== id)) {
+  if (input.barcode?.trim() && products.some((p) => p.barcode === input.barcode?.trim() && p.id !== id)) {
     throw new ApiRequestError('A product with this barcode already exists.', 'DUPLICATE_BARCODE');
   }
 

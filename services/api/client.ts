@@ -10,6 +10,8 @@ interface RequestOptions {
   body?: unknown;
 }
 
+const REQUEST_TIMEOUT_MS = 15000;
+
 async function request<T>(path: string, options: RequestOptions): Promise<T> {
   if (!config.apiBaseUrl) {
     throw new ApiRequestError(
@@ -27,6 +29,9 @@ async function request<T>(path: string, options: RequestOptions): Promise<T> {
 
   const token = await getAuthToken();
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
   let response: Response;
   try {
     response = await fetch(url.toString(), {
@@ -37,9 +42,16 @@ async function request<T>(path: string, options: RequestOptions): Promise<T> {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+      signal: controller.signal,
     });
-  } catch {
-    throw new ApiRequestError('Unable to reach the server. Check your connection.', 'NETWORK_ERROR');
+  } catch (error) {
+    const message =
+      error instanceof Error && error.name === 'AbortError'
+        ? 'The server took too long to respond. Check your connection and try again.'
+        : 'Unable to reach the server. Check your connection.';
+    throw new ApiRequestError(message, 'NETWORK_ERROR');
+  } finally {
+    clearTimeout(timeout);
   }
 
   if (!response.ok) {

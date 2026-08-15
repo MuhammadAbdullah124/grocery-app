@@ -22,7 +22,7 @@ export function CategoryChip({ category, selected = false, onPress }: CategoryCh
       </View>
       <Text
         numberOfLines={1}
-        className={`mt-1.5 text-xs ${selected ? 'font-semibold text-primary-600' : 'text-gray-600'}`}
+        className={`mt-1.5 text-xs ${selected ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-600 dark:text-gray-300'}`}
       >
         {meta.label}
       </Text>

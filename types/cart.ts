@@ -2,7 +2,7 @@ import type { Product } from './product';
 
 export interface CartItem {
   productId: string;
-  barcode: string;
+  barcode: string | null;
   name: string;
   image: string;
   brand: string;

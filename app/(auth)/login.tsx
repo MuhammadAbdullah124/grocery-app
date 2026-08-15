@@ -27,8 +27,8 @@ export default function LoginScreen() {
 
   return (
     <Screen scroll contentContainerClassName="px-6 pb-10 pt-6">
-      <Text className="text-2xl font-bold text-gray-900">Welcome back</Text>
-      <Text className="mt-1.5 text-sm text-gray-500">Log in to start ringing up sales.</Text>
+      <Text className="text-2xl font-bold text-gray-900 dark:text-gray-50">Welcome back</Text>
+      <Text className="mt-1.5 text-sm text-gray-500 dark:text-gray-400">Log in to start ringing up sales.</Text>
 
       <View className="mt-8 gap-4">
         <Input
@@ -47,13 +47,13 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
         />
-        {fieldError || error ? <Text className="text-sm text-red-500">{fieldError ?? error}</Text> : null}
+        {fieldError || error ? <Text className="text-sm text-red-500 dark:text-red-400">{fieldError ?? error}</Text> : null}
 
         <Pressable
           onPress={() => Alert.alert('Reset password', 'Password reset will be available once account services are connected.')}
           className="self-end"
         >
-          <Text className="text-sm font-medium text-primary-600">Forgot password?</Text>
+          <Text className="text-sm font-medium text-primary-600 dark:text-primary-400">Forgot password?</Text>
         </Pressable>
       </View>
 

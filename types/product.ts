@@ -12,7 +12,7 @@ export type ProductUnit = 'pc' | 'kg' | 'g' | 'l' | 'ml' | 'dozen' | 'pack';
 
 export interface Product {
   id: string;
-  barcode: string;
+  barcode: string | null;
   name: string;
   brand: string;
   description: string;
@@ -32,7 +32,7 @@ export interface ProductCategoryMeta {
 }
 
 export interface ProductInput {
-  barcode: string;
+  barcode?: string;
   name: string;
   brand: string;
   description: string;

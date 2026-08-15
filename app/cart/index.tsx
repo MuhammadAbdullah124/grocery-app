@@ -25,14 +25,14 @@ export default function CartScreen() {
   };
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
       <Header
         title="Current Sale"
         subtitle={itemCount > 0 ? `${itemCount} ${itemCount === 1 ? 'item' : 'items'}` : undefined}
         right={
           items.length > 0 ? (
-            <Text onPress={confirmClearCart} className="text-sm font-medium text-red-500">
+            <Text onPress={confirmClearCart} className="text-sm font-medium text-red-500 dark:text-red-400">
               Clear
             </Text>
           ) : undefined

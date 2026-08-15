@@ -24,7 +24,7 @@ export default function NewProductScreen() {
   };
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
       <Header title="Add Product" />
       <ProductForm submitLabel="Add Product" isSubmitting={createProduct.isPending} onSubmit={handleSubmit} />

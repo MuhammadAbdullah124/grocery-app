@@ -50,7 +50,7 @@ export default function EditProductScreen() {
 
   if (productQuery.isLoading) {
     return (
-      <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+      <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
         <StatusBar style="dark" />
         <Header title="Edit Product" />
         <View className="px-5 pt-4">
@@ -62,7 +62,7 @@ export default function EditProductScreen() {
 
   if (productQuery.isError || !productQuery.data) {
     return (
-      <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+      <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
         <StatusBar style="dark" />
         <Header title="Edit Product" />
         <ErrorState title="Product not found" description="This product may have been removed." />
@@ -73,13 +73,13 @@ export default function EditProductScreen() {
   const product = productQuery.data;
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
       <Header
         title="Edit Product"
         right={
           <Pressable onPress={handleDelete} disabled={deleteProduct.isPending} hitSlop={8}>
-            <Text className="text-sm font-medium text-red-500">
+            <Text className="text-sm font-medium text-red-500 dark:text-red-400">
               {deleteProduct.isPending ? 'Deleting…' : 'Delete'}
             </Text>
           </Pressable>
@@ -90,7 +90,7 @@ export default function EditProductScreen() {
         isSubmitting={updateProduct.isPending}
         onSubmit={handleSubmit}
         initialValues={{
-          barcode: product.barcode,
+          barcode: product.barcode ?? undefined,
           name: product.name,
           brand: product.brand,
           description: product.description,

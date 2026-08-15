@@ -48,19 +48,19 @@ export default function SearchScreen() {
   const header = (
     <View>
       <View className="flex-row items-center justify-between px-5 pt-3">
-        <Text className="text-2xl font-bold text-gray-900">Search</Text>
+        <Text className="text-2xl font-bold text-gray-900 dark:text-gray-50">Search</Text>
         {hasFilters ? (
           <Pressable
             onPress={() => {
               setInputValue('');
               setSelectedCategory(null);
             }}
-            className="flex-row items-center rounded-full bg-gray-100 px-3 py-1.5"
+            className="flex-row items-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1.5"
             accessibilityRole="button"
             accessibilityLabel="Clear filters"
           >
             <Ionicons name="close" size={14} color="#6b7280" />
-            <Text className="ml-1 text-xs font-medium text-gray-500">Clear</Text>
+            <Text className="ml-1 text-xs font-medium text-gray-500 dark:text-gray-400">Clear</Text>
           </Pressable>
         ) : null}
       </View>
@@ -94,7 +94,7 @@ export default function SearchScreen() {
       </View>
 
       {activeQuery.isLoading ? null : (
-        <Text className="mt-5 px-5 text-sm text-gray-400">
+        <Text className="mt-5 px-5 text-sm text-gray-400 dark:text-gray-500">
           {results.length} {results.length === 1 ? 'result' : 'results'}
         </Text>
       )}
@@ -102,7 +102,7 @@ export default function SearchScreen() {
   );
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white">
+    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
       {activeQuery.isError ? (
         <>

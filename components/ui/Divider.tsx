@@ -5,5 +5,5 @@ interface DividerProps {
 }
 
 export function Divider({ className }: DividerProps) {
-  return <View className={`h-px w-full bg-gray-100 ${className ?? ''}`} />;
+  return <View className={`h-px w-full bg-gray-100 dark:bg-gray-800 ${className ?? ''}`} />;
 }

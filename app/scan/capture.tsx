@@ -7,20 +7,22 @@ import * as Haptics from 'expo-haptics';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraPermissionGate } from '@/components/scanner/CameraPermissionGate';
 import { ScannerOverlay } from '@/components/scanner/ScannerOverlay';
-import { useBarcodeScanStore } from '@/store/barcodeScanStore';
+import { useScannedProductStore } from '@/store/scannedProductStore';
+import { parseScannedCode } from '@/utils/scannedCodeParser';
 
 const BARCODE_TYPES = ['ean13', 'ean8', 'upc_a', 'upc_e', 'code128', 'qr'] as const;
 
 /**
  * Standalone "scan and return" screen — unlike app/scan/index.tsx this does
- * not look up a product. It just captures a code and hands it back to
- * whichever screen pushed it (e.g. the Add/Edit Product form) via
- * useBarcodeScanStore, then goes back.
+ * not look up a product. It parses whatever the code contains (a QR may
+ * encode more than just a barcode — see parseScannedCode) and hands the
+ * recognized fields back to whichever screen pushed it (e.g. the Add/Edit
+ * Product form) via useScannedProductStore, then goes back.
  */
 export default function CaptureBarcodeScreen() {
   const router = useRouter();
   const hasScannedRef = useRef(false);
-  const setScannedBarcode = useBarcodeScanStore((state) => state.setScannedBarcode);
+  const setScannedProduct = useScannedProductStore((state) => state.setScannedProduct);
 
   useFocusEffect(
     useCallback(() => {
@@ -32,7 +34,7 @@ export default function CaptureBarcodeScreen() {
     if (hasScannedRef.current) return;
     hasScannedRef.current = true;
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-    setScannedBarcode(result.data);
+    setScannedProduct(parseScannedCode(result.data, result.type).fields);
     router.back();
   };
 
