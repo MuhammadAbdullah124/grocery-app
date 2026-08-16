@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { Order, OrderDateRange, SalesSummary } from '@/types';
+import type { Order, OrderDateRange, OrderItem, ProfitLoss, ProfitLossTotals, SalesSummary } from '@/types';
 import * as ledgerTransactionStore from './ledgerTransactionStore';
 import * as contactStore from './contactStore';
+import * as productStore from './productStore';
 
 const ORDERS_KEY = 'freshcart:orders';
 
@@ -106,5 +107,76 @@ export async function getSalesSummary(): Promise<SalesSummary> {
     week: totalsSince(weekStart),
     month: totalsSince(monthStart),
     series,
+  };
+}
+
+/**
+ * Mock-mode mirror of OrderController::profitLoss. Since order items in mock
+ * storage don't carry a cost snapshot, cost is looked up from each product's
+ * *current* purchasePrice at query time (the real backend captures it at
+ * sale time instead — see order_items.cost_price).
+ */
+export async function getProfitLoss(): Promise<ProfitLoss> {
+  const [orders, products] = await Promise.all([readOrders(), productStore.getAllProducts()]);
+  const productCost = new Map(products.map((p) => [p.id, p.purchasePrice ?? null]));
+
+  let hasIncompleteCostData = false;
+  const lineCost = (item: OrderItem): number => {
+    const cost = productCost.get(item.productId);
+    if (cost == null) {
+      hasIncompleteCostData = true;
+      return 0;
+    }
+    return cost * item.quantity;
+  };
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const weekStart = new Date(today);
+  weekStart.setDate(weekStart.getDate() - 6);
+  const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+
+  const totalsSince = (since: Date): ProfitLossTotals => {
+    const cutoff = since.getTime();
+    const matching = orders.filter((o) => new Date(o.createdAt).getTime() >= cutoff);
+    const revenue = matching.reduce((sum, o) => sum + o.total, 0);
+    const cost = matching.reduce((sum, o) => sum + o.items.reduce((s, item) => s + lineCost(item), 0), 0);
+    return {
+      revenue,
+      cost,
+      profit: revenue - cost,
+      marginPercent: revenue > 0 ? Math.round(((revenue - cost) / revenue) * 1000) / 10 : 0,
+    };
+  };
+
+  const productTotals = new Map<string, { name: string; quantitySold: number; revenue: number; cost: number }>();
+  for (const order of orders) {
+    for (const item of order.items) {
+      const existing = productTotals.get(item.productId) ?? { name: item.name, quantitySold: 0, revenue: 0, cost: 0 };
+      existing.quantitySold += item.quantity;
+      existing.revenue += item.subtotal;
+      existing.cost += lineCost(item);
+      productTotals.set(item.productId, existing);
+    }
+  }
+
+  const topProducts = Array.from(productTotals.entries())
+    .map(([productId, t]) => ({
+      productId,
+      name: t.name,
+      quantitySold: t.quantitySold,
+      revenue: t.revenue,
+      cost: t.cost,
+      profit: t.revenue - t.cost,
+    }))
+    .sort((a, b) => b.profit - a.profit)
+    .slice(0, 10);
+
+  return {
+    today: totalsSince(today),
+    week: totalsSince(weekStart),
+    month: totalsSince(monthStart),
+    topProducts,
+    hasIncompleteCostData,
   };
 }

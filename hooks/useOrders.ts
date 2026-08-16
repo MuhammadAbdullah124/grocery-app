@@ -17,6 +17,13 @@ export function useSalesSummary() {
   });
 }
 
+export function useProfitLoss() {
+  return useQuery({
+    queryKey: ['orders', 'profit-loss'],
+    queryFn: ordersApi.getProfitLoss,
+  });
+}
+
 export function useOrder(id: string | undefined) {
   return useQuery({
     queryKey: ['order', id],

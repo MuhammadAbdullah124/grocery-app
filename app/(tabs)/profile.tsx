@@ -87,6 +87,12 @@ export default function ProfileScreen() {
               label="Purchases"
               onPress={() => router.push('/purchases')}
             />
+            <Divider />
+            <SettingsRow
+              icon="trending-up-outline"
+              label="Profit & Loss"
+              onPress={() => router.push('/profit-loss')}
+            />
           </View>
         </View>
 

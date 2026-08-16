@@ -49,3 +49,28 @@ export interface OrderDateRange {
   from?: string;
   to?: string;
 }
+
+export interface ProfitLossTotals {
+  revenue: number;
+  cost: number;
+  profit: number;
+  marginPercent: number;
+}
+
+export interface ProfitLossTopProduct {
+  productId: string;
+  name: string;
+  quantitySold: number;
+  revenue: number;
+  cost: number;
+  profit: number;
+}
+
+export interface ProfitLoss {
+  today: ProfitLossTotals;
+  week: ProfitLossTotals;
+  month: ProfitLossTotals;
+  topProducts: ProfitLossTopProduct[];
+  /** True if some sold products never had a purchase_price set — their cost counts as 0, so profit is likely overstated. */
+  hasIncompleteCostData: boolean;
+}

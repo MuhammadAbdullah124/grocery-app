@@ -1,6 +1,6 @@
 import { config } from '@/constants/config';
 import { ApiRequestError } from '@/types';
-import type { CartItem, Order, OrderDateRange, OrderItem, PaymentMethod, SalesSummary } from '@/types';
+import type { CartItem, Order, OrderDateRange, OrderItem, PaymentMethod, ProfitLoss, SalesSummary } from '@/types';
 import { apiClient } from './client';
 import * as mockOrderStore from '@/services/mock/orderStore';
 import { generateId, generateOrderNumber } from '@/utils/id';
@@ -78,4 +78,9 @@ export async function getOrder(id: string): Promise<Order> {
 export async function getSalesSummary(): Promise<SalesSummary> {
   if (config.useMockApi) return mockOrderStore.getSalesSummary();
   return apiClient.get<SalesSummary>('/orders/summary');
+}
+
+export async function getProfitLoss(): Promise<ProfitLoss> {
+  if (config.useMockApi) return mockOrderStore.getProfitLoss();
+  return apiClient.get<ProfitLoss>('/orders/profit-loss');
 }

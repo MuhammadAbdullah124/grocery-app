@@ -60,6 +60,7 @@ export default function RootLayout() {
                 <Stack.Screen name="receipt/[id]" />
                 <Stack.Screen name="legal/[slug]" />
                 <Stack.Screen name="inventory" />
+                <Stack.Screen name="profit-loss" />
                 <Stack.Screen name="profile" />
                 <Stack.Screen name="contacts" />
                 <Stack.Screen name="purchases" />
