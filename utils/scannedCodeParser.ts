@@ -1,8 +1,17 @@
-import type { ProductCategory, ProductInput, ProductUnit } from '@/types';
-
-export type ScannedProductFields = Partial<
-  Pick<ProductInput, 'barcode' | 'name' | 'brand' | 'description' | 'category' | 'price' | 'discountPrice' | 'stock' | 'unit' | 'image'>
->;
+export interface ScannedProductFields {
+  barcode?: string;
+  name?: string;
+  brand?: string;
+  description?: string;
+  /** Raw category name as found in the scan — categories are user-managed, matched by name in the UI. */
+  categoryName?: string;
+  price?: number;
+  discountPrice?: number;
+  stock?: number;
+  /** Raw unit name as found in the scan — units are user-managed (e.g. "250ml"), matched by name in the UI. */
+  unitName?: string;
+  image?: string;
+}
 
 export interface ParsedScanResult {
   /** Always populated — the cleanest value we could find to use as the barcode/SKU lookup key. */
@@ -12,29 +21,16 @@ export interface ParsedScanResult {
   format: 'json' | 'gs1-digital-link' | 'url-query' | 'key-value' | 'raw';
 }
 
-const CATEGORY_VALUES: ProductCategory[] = [
-  'fruits',
-  'vegetables',
-  'dairy',
-  'bakery',
-  'beverages',
-  'snacks',
-  'household',
-  'personal_care',
-];
-
-const UNIT_VALUES: ProductUnit[] = ['pc', 'kg', 'g', 'l', 'ml', 'dozen', 'pack'];
-
 const FIELD_ALIASES: Record<keyof ScannedProductFields, string[]> = {
   barcode: ['barcode', 'code', 'sku', 'gtin', 'ean', 'upc', '01'],
   name: ['name', 'title', 'productname', 'product_name', 'itemname'],
   brand: ['brand', 'manufacturer', 'maker'],
   description: ['description', 'desc', 'details'],
-  category: ['category', 'cat', 'type'],
+  categoryName: ['category', 'cat', 'type'],
   price: ['price', 'mrp', 'amount', 'rate'],
   discountPrice: ['discountprice', 'discount_price', 'saleprice', 'sale_price', 'offerprice'],
   stock: ['stock', 'qty', 'quantity', 'stockqty', 'stock_qty'],
-  unit: ['unit', 'uom'],
+  unitName: ['unit', 'uom'],
   image: ['image', 'img', 'imageurl', 'image_url', 'photo'],
 };
 
@@ -45,16 +41,6 @@ function normalizeKey(key: string): string {
 function toNumber(value: unknown): number | undefined {
   const n = typeof value === 'string' ? Number(value.trim()) : typeof value === 'number' ? value : NaN;
   return Number.isFinite(n) ? n : undefined;
-}
-
-function matchCategory(value: string): ProductCategory | undefined {
-  const normalized = value.trim().toLowerCase().replace(/[\s-]+/g, '_');
-  return CATEGORY_VALUES.find((c) => c === normalized);
-}
-
-function matchUnit(value: string): ProductUnit | undefined {
-  const normalized = value.trim().toLowerCase();
-  return UNIT_VALUES.find((u) => u === normalized);
 }
 
 /** Maps a bag of loosely-keyed values (from JSON/query-string/key-value pairs) onto known product fields. */
@@ -74,16 +60,6 @@ function mapToFields(raw: Record<string, unknown>): ScannedProductFields {
       case 'stock': {
         const num = toNumber(value);
         if (num !== undefined) (fields[fieldName] as number) = num;
-        break;
-      }
-      case 'category': {
-        const category = matchCategory(value);
-        if (category) fields.category = category;
-        break;
-      }
-      case 'unit': {
-        const unit = matchUnit(value);
-        if (unit) fields.unit = unit;
         break;
       }
       default:

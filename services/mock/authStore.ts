@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ApiRequestError } from '@/types';
-import type { AuthCredentials, RegisterPayload, User } from '@/types';
+import type { AuthCredentials, ProfileUpdatePayload, RegisterPayload, User } from '@/types';
 import { generateId } from '@/utils/id';
 import { MOCK_USER } from './users.data';
 
@@ -45,8 +45,10 @@ export async function register(payload: RegisterPayload): Promise<Session> {
   const user: User = {
     id: generateId('user'),
     name: payload.name.trim(),
+    username: payload.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_'),
     email: payload.email.trim(),
     phone: payload.phone.trim(),
+    shopName: null,
     avatar: null,
     role: 'admin',
   };
@@ -66,4 +68,23 @@ export async function getSession(): Promise<Session | null> {
   } catch {
     return null;
   }
+}
+
+export async function updateProfile(payload: ProfileUpdatePayload): Promise<User> {
+  const session = await getSession();
+  if (!session) {
+    throw new ApiRequestError('Not authenticated', 'UNAUTHORIZED');
+  }
+  if (!payload.username.trim()) {
+    throw new ApiRequestError('Username is required.', 'INVALID_PAYLOAD');
+  }
+
+  const user: User = {
+    ...session.user,
+    username: payload.username.trim().toLowerCase(),
+    shopName: payload.shopName?.trim() || null,
+  };
+
+  await persistSession({ ...session, user });
+  return user;
 }

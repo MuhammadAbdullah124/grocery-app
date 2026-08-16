@@ -1,17 +1,16 @@
-import { useState } from 'react';
-import { Alert, ScrollView, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
+import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { Header } from '@/components/layout/Header';
 import { Avatar } from '@/components/ui/Avatar';
 import { Button } from '@/components/ui/Button';
 import { Divider } from '@/components/ui/Divider';
 import { SettingsRow } from '@/components/ui/SettingsRow';
-import { StoreSwitcherModal } from '@/components/layout/StoreSwitcherModal';
 import { useAuthStore } from '@/store/authStore';
 import { useSettingsStore } from '@/store/settingsStore';
-import { useSelectedStore } from '@/hooks/useSelectedStore';
 import { APP_NAME } from '@/constants/config';
 
 export default function ProfileScreen() {
@@ -24,26 +23,10 @@ export default function ProfileScreen() {
   const setNotificationsEnabled = useSettingsStore((state) => state.setNotificationsEnabled);
   const darkModeEnabled = useSettingsStore((state) => state.darkModeEnabled);
   const setDarkModeEnabled = useSettingsStore((state) => state.setDarkModeEnabled);
-  const language = useSettingsStore((state) => state.language);
-  const setLanguage = useSettingsStore((state) => state.setLanguage);
-  const storeId = useSettingsStore((state) => state.storeId);
-  const setStoreId = useSettingsStore((state) => state.setStoreId);
-
-  const { store: selectedStore, stores } = useSelectedStore();
-
-  const [storeModalVisible, setStoreModalVisible] = useState(false);
 
   const handleToggleDarkMode = (value: boolean) => {
     setDarkModeEnabled(value);
     setColorScheme(value ? 'dark' : 'light');
-  };
-
-  const handleChangeLanguage = () => {
-    Alert.alert('Language', 'Choose your preferred language', [
-      { text: 'English', onPress: () => setLanguage('en') },
-      { text: 'اردو (Urdu)', onPress: () => setLanguage('ur') },
-      { text: 'Cancel', style: 'cancel' },
-    ]);
   };
 
   const handleLogout = () => {
@@ -56,27 +39,37 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
+      <Header title="Profile" showProfileShortcut={false} />
       <ScrollView
         className="flex-1 px-5"
-        contentContainerStyle={{ paddingTop: 12, paddingBottom: 32, gap: 24 }}
+        contentContainerStyle={{ paddingTop: 4, paddingBottom: 32, gap: 24 }}
         showsVerticalScrollIndicator={false}
       >
-        <Text className="text-2xl font-bold text-gray-900 dark:text-gray-50">Profile</Text>
-
-        <View className="flex-row items-center rounded-2xl border border-gray-100 dark:border-gray-800 p-4">
+        <Pressable
+          onPress={() => router.push('/profile/edit')}
+          className="flex-row items-center rounded-2xl border border-gray-100 dark:border-gray-800 p-4"
+          accessibilityRole="button"
+          accessibilityLabel="Edit profile"
+        >
           <Avatar name={user?.name ?? 'Guest'} uri={user?.avatar} size={56} />
           <View className="ml-4 flex-1">
             <Text className="text-base font-bold text-gray-900 dark:text-gray-50" numberOfLines={1}>
               {user?.name ?? 'Guest'}
             </Text>
+            {user?.shopName ? (
+              <Text className="mt-0.5 text-xs font-medium text-primary-600 dark:text-primary-400" numberOfLines={1}>
+                {user.shopName}
+              </Text>
+            ) : null}
             <Text className="mt-0.5 text-xs text-gray-500 dark:text-gray-400" numberOfLines={1}>
-              {user?.email}
+              {user?.username ? `@${user.username}` : user?.email}
             </Text>
             <Text className="mt-0.5 text-xs text-gray-500 dark:text-gray-400" numberOfLines={1}>
               {user?.phone}
             </Text>
           </View>
-        </View>
+          <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+        </Pressable>
 
         <View>
           <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
@@ -87,6 +80,12 @@ export default function ProfileScreen() {
               icon="cube-outline"
               label="Inventory"
               onPress={() => router.push('/inventory')}
+            />
+            <Divider />
+            <SettingsRow
+              icon="cart-outline"
+              label="Purchases"
+              onPress={() => router.push('/purchases')}
             />
           </View>
         </View>
@@ -106,20 +105,6 @@ export default function ProfileScreen() {
               icon="moon-outline"
               label="Dark Mode"
               toggle={{ value: darkModeEnabled, onValueChange: handleToggleDarkMode }}
-            />
-            <Divider />
-            <SettingsRow
-              icon="language-outline"
-              label="Language"
-              value={language === 'en' ? 'English' : 'اردو'}
-              onPress={handleChangeLanguage}
-            />
-            <Divider />
-            <SettingsRow
-              icon="storefront-outline"
-              label="Store"
-              value={selectedStore?.name}
-              onPress={() => setStoreModalVisible(true)}
             />
           </View>
         </View>
@@ -148,14 +133,6 @@ export default function ProfileScreen() {
           <Text className="mt-4 text-center text-xs text-gray-300 dark:text-gray-600">{APP_NAME} v1.0.0</Text>
         </View>
       </ScrollView>
-
-      <StoreSwitcherModal
-        visible={storeModalVisible}
-        stores={stores ?? []}
-        selectedStoreId={storeId}
-        onSelect={setStoreId}
-        onClose={() => setStoreModalVisible(false)}
-      />
     </SafeAreaView>
   );
 }

@@ -8,6 +8,9 @@ interface RequestOptions {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   params?: QueryParams;
   body?: unknown;
+  /** FormData bodies must NOT get a JSON Content-Type or be stringified — fetch sets the multipart boundary itself. */
+  isFormData?: boolean;
+  timeoutMs?: number;
 }
 
 const REQUEST_TIMEOUT_MS = 15000;
@@ -30,7 +33,7 @@ async function request<T>(path: string, options: RequestOptions): Promise<T> {
   const token = await getAuthToken();
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), options.timeoutMs ?? REQUEST_TIMEOUT_MS);
 
   let response: Response;
   try {
@@ -38,10 +41,14 @@ async function request<T>(path: string, options: RequestOptions): Promise<T> {
       method: options.method,
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        ...(options.isFormData ? {} : { 'Content-Type': 'application/json' }),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+      body: options.isFormData
+        ? (options.body as FormData)
+        : options.body !== undefined
+          ? JSON.stringify(options.body)
+          : undefined,
       signal: controller.signal,
     });
   } catch (error) {
@@ -80,4 +87,7 @@ export const apiClient = {
   post: <T>(path: string, body?: unknown) => request<T>(path, { method: 'POST', body }),
   put: <T>(path: string, body?: unknown) => request<T>(path, { method: 'PUT', body }),
   delete: <T>(path: string) => request<T>(path, { method: 'DELETE' }),
+  /** Longer timeout — a photo upload over a slow mobile connection needs more room than a JSON request. */
+  upload: <T>(path: string, formData: FormData) =>
+    request<T>(path, { method: 'POST', body: formData, isFormData: true, timeoutMs: 30000 }),
 };

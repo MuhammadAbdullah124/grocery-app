@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Order, OrderDateRange, SalesSummary } from '@/types';
+import * as ledgerTransactionStore from './ledgerTransactionStore';
+import * as contactStore from './contactStore';
 
 const ORDERS_KEY = 'freshcart:orders';
 
@@ -21,6 +23,16 @@ function toDateKey(iso: string): string {
   return iso.slice(0, 10);
 }
 
+/** Attaches the contact record for credit sales, mirroring the real API's eager-loaded `contact` relation. */
+async function withContact(order: Order): Promise<Order> {
+  if (!order.contactId) return order;
+  try {
+    return { ...order, contact: await contactStore.getContact(order.contactId) };
+  } catch {
+    return order;
+  }
+}
+
 export async function getOrders(range?: OrderDateRange): Promise<Order[]> {
   const orders = await readOrders();
   const filtered = orders.filter((order) => {
@@ -29,18 +41,33 @@ export async function getOrders(range?: OrderDateRange): Promise<Order[]> {
     if (range?.to && dateKey > range.to) return false;
     return true;
   });
-  return filtered.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  const sorted = filtered.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  return Promise.all(sorted.map(withContact));
 }
 
 export async function getOrder(id: string): Promise<Order | null> {
   const orders = await readOrders();
-  return orders.find((o) => o.id === id) ?? null;
+  const order = orders.find((o) => o.id === id);
+  return order ? withContact(order) : null;
 }
 
 export async function saveOrder(order: Order): Promise<Order> {
   const orders = await readOrders();
   orders.push(order);
   await writeOrders(orders);
+
+  // Mirrors OrderController::store's credit-sale ledger creation, so mock
+  // mode behaves the same as the real backend.
+  if (order.paymentMethod === 'credit' && order.contactId) {
+    await ledgerTransactionStore.createLinkedLedgerTransaction({
+      contactId: order.contactId,
+      entryType: 'you_gave',
+      category: 'sale',
+      amount: order.total,
+      orderId: order.id,
+    });
+  }
+
   return order;
 }
 

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { AuthCredentials, RegisterPayload, User } from '@/types';
+import type { AuthCredentials, ProfileUpdatePayload, RegisterPayload, User } from '@/types';
 import { ApiRequestError } from '@/types';
 import { authApi } from '@/services/api';
 
@@ -11,6 +11,7 @@ interface AuthState {
   error: string | null;
   login: (credentials: AuthCredentials) => Promise<boolean>;
   register: (payload: RegisterPayload) => Promise<boolean>;
+  updateProfile: (payload: ProfileUpdatePayload) => Promise<boolean>;
   logout: () => Promise<void>;
   restoreSession: () => Promise<void>;
   clearError: () => void;
@@ -44,6 +45,18 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const session = await authApi.register(payload);
       set({ user: session.user, isAuthenticated: true, isLoading: false });
+      return true;
+    } catch (error) {
+      set({ isLoading: false, error: messageFor(error) });
+      return false;
+    }
+  },
+
+  updateProfile: async (payload) => {
+    set({ isLoading: true, error: null });
+    try {
+      const user = await authApi.updateProfile(payload);
+      set({ user, isLoading: false });
       return true;
     } catch (error) {
       set({ isLoading: false, error: messageFor(error) });

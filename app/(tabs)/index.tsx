@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,31 +13,23 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { CategoryChip } from '@/components/product/CategoryChip';
-import { StoreSwitcherModal } from '@/components/layout/StoreSwitcherModal';
+import { useCategories } from '@/hooks/useCategories';
 
 import { useAuthStore } from '@/store/authStore';
-import { useSettingsStore } from '@/store/settingsStore';
 import { useCartStore } from '@/store/cartStore';
 import { useProducts, useDeals } from '@/hooks/useProducts';
-import { useSelectedStore } from '@/hooks/useSelectedStore';
 import { useIconColor } from '@/hooks/useIconColor';
 import { getGreeting } from '@/utils/greeting';
-import { CATEGORY_ORDER } from '@/constants/categories';
 
 export default function HomeScreen() {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
-  const storeId = useSettingsStore((state) => state.storeId);
-  const setStoreId = useSettingsStore((state) => state.setStoreId);
   const cartCount = useCartStore((state) => state.getItemCount());
   const iconColor = useIconColor();
 
-  const [storeModalVisible, setStoreModalVisible] = useState(false);
-
-  const { store: selectedStore, stores } = useSelectedStore();
-
   const productsQuery = useProducts();
   const dealsQuery = useDeals();
+  const categoriesQuery = useCategories();
 
   const popularProducts = useMemo(() => (productsQuery.data ?? []).slice(0, 10), [productsQuery.data]);
   const greeting = getGreeting();
@@ -62,18 +54,6 @@ export default function HomeScreen() {
           <Text className="text-xl font-bold text-gray-900 dark:text-gray-50" numberOfLines={1}>
             {user?.name ?? 'Guest'}
           </Text>
-          <Pressable
-            onPress={() => setStoreModalVisible(true)}
-            className="mt-1 flex-row items-center self-start"
-            accessibilityRole="button"
-            accessibilityLabel="Change store"
-          >
-            <Ionicons name="location-outline" size={14} color="#1db567" />
-            <Text className="ml-1 text-xs font-medium text-primary-600 dark:text-primary-400" numberOfLines={1}>
-              {selectedStore?.name ?? 'Select a store'}
-            </Text>
-            <Ionicons name="chevron-down" size={14} color="#1db567" style={{ marginLeft: 2 }} />
-          </Pressable>
         </View>
         <Pressable
           onPress={() => router.push('/(tabs)/profile')}
@@ -124,23 +104,25 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
-      <View className="mt-7">
-        <Text className="px-5 text-base font-bold text-gray-900 dark:text-gray-50">Categories</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          className="mt-3 pl-5"
-          contentContainerStyle={{ paddingRight: 20 }}
-        >
-          {CATEGORY_ORDER.map((category) => (
-            <CategoryChip
-              key={category}
-              category={category}
-              onPress={() => router.push({ pathname: '/(tabs)/search', params: { category } })}
-            />
-          ))}
-        </ScrollView>
-      </View>
+      {categoriesQuery.data && categoriesQuery.data.length > 0 ? (
+        <View className="mt-7">
+          <Text className="px-5 text-base font-bold text-gray-900 dark:text-gray-50">Categories</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="mt-3 pl-5"
+            contentContainerStyle={{ paddingRight: 20 }}
+          >
+            {categoriesQuery.data.map((category) => (
+              <CategoryChip
+                key={category.id}
+                category={category}
+                onPress={() => router.push({ pathname: '/(tabs)/search', params: { categoryId: category.id } })}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      ) : null}
 
       <View className="mt-7">
         <Text className="px-5 text-base font-bold text-gray-900 dark:text-gray-50">Active Discounts</Text>
@@ -196,13 +178,6 @@ export default function HomeScreen() {
             <EmptyState icon="basket-outline" title="No products available" description="Please check back later." />
           )
         }
-      />
-      <StoreSwitcherModal
-        visible={storeModalVisible}
-        stores={stores ?? []}
-        selectedStoreId={storeId}
-        onSelect={setStoreId}
-        onClose={() => setStoreModalVisible(false)}
       />
     </SafeAreaView>
   );

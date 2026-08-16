@@ -10,6 +10,10 @@ export interface CreateOrderInput {
   storeName: string;
   items: CartItem[];
   paymentMethod: PaymentMethod;
+  /** Required when paymentMethod is 'cash' — must cover the total. */
+  cashReceived?: number;
+  /** Required when paymentMethod is 'credit' — who the sale is owed by. */
+  contactId?: string;
 }
 
 /**
@@ -27,17 +31,23 @@ function buildOrderFromItems(input: CreateOrderInput): Order {
     (sum, item) => sum + (item.discountPrice !== null ? (item.price - item.discountPrice) * item.quantity : 0),
     0,
   );
+  const total = subtotal - discount;
+  const isCash = input.paymentMethod === 'cash';
+  const cashReceived = isCash ? Math.max(input.cashReceived ?? 0, total) : null;
 
   return {
     id: generateId('order'),
     orderNumber: generateOrderNumber(),
     storeId: input.storeId,
     storeName: input.storeName,
+    contactId: input.paymentMethod === 'credit' ? (input.contactId ?? null) : null,
     items,
     subtotal,
     discount,
-    total: subtotal - discount,
+    total,
     paymentMethod: input.paymentMethod,
+    cashReceived,
+    changeDue: cashReceived !== null ? cashReceived - total : null,
     status: 'completed',
     createdAt: new Date().toISOString(),
   };

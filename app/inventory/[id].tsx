@@ -52,7 +52,7 @@ export default function EditProductScreen() {
     return (
       <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
         <StatusBar style="dark" />
-        <Header title="Edit Product" />
+        <Header title="Edit Product" showProfileShortcut={false} />
         <View className="px-5 pt-4">
           <Skeleton height={200} radius={16} />
         </View>
@@ -64,7 +64,7 @@ export default function EditProductScreen() {
     return (
       <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
         <StatusBar style="dark" />
-        <Header title="Edit Product" />
+        <Header title="Edit Product" showProfileShortcut={false} />
         <ErrorState title="Product not found" description="This product may have been removed." />
       </SafeAreaView>
     );
@@ -77,6 +77,7 @@ export default function EditProductScreen() {
       <StatusBar style="dark" />
       <Header
         title="Edit Product"
+        showProfileShortcut={false}
         right={
           <Pressable onPress={handleDelete} disabled={deleteProduct.isPending} hitSlop={8}>
             <Text className="text-sm font-medium text-red-500 dark:text-red-400">
@@ -94,11 +95,12 @@ export default function EditProductScreen() {
           name: product.name,
           brand: product.brand,
           description: product.description,
-          category: product.category,
+          categoryId: product.categoryId,
+          purchasePrice: product.purchasePrice ?? null,
           price: product.price,
           discountPrice: product.discountPrice,
           stock: product.stock,
-          unit: product.unit,
+          unitId: product.unitId,
           image: product.image,
         }}
       />

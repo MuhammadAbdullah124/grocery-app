@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
 import { useIconColor } from '@/hooks/useIconColor';
+import { ProfileShortcut } from './ProfileShortcut';
 
 interface HeaderProps {
   title: string;
@@ -10,9 +11,18 @@ interface HeaderProps {
   showBack?: boolean;
   onBack?: () => void;
   right?: ReactNode;
+  /** Off by default only on focused-task screens (checkout, forms, pickers) — see ProfileShortcut. */
+  showProfileShortcut?: boolean;
 }
 
-export function Header({ title, subtitle, showBack = true, onBack, right }: HeaderProps) {
+export function Header({
+  title,
+  subtitle,
+  showBack = true,
+  onBack,
+  right,
+  showProfileShortcut = true,
+}: HeaderProps) {
   const router = useRouter();
   const iconColor = useIconColor();
 
@@ -41,7 +51,12 @@ export function Header({ title, subtitle, showBack = true, onBack, right }: Head
           ) : null}
         </View>
       </View>
-      {right ? <View className="ml-3">{right}</View> : null}
+      {right || showProfileShortcut ? (
+        <View className="ml-3 flex-row items-center gap-2">
+          {right}
+          {showProfileShortcut ? <ProfileShortcut /> : null}
+        </View>
+      ) : null}
     </View>
   );
 }

@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Alert, Pressable, ScrollView, Text, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { Alert, Pressable, Text, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,9 +8,11 @@ import { StatusBar } from 'expo-status-bar';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/Button';
 import { Divider } from '@/components/ui/Divider';
+import { Input } from '@/components/ui/Input';
 import { useCartStore } from '@/store/cartStore';
 import { useSelectedStore } from '@/hooks/useSelectedStore';
 import { useCreateOrder } from '@/hooks/useOrders';
+import { useContactPickerStore } from '@/store/contactPickerStore';
 import { formatPrice } from '@/utils/format';
 import type { PaymentMethod } from '@/types';
 
@@ -21,6 +24,7 @@ const PAYMENT_OPTIONS: {
 }[] = [
   { id: 'cash', label: 'Cash', description: 'Customer pays with cash', icon: 'cash-outline' },
   { id: 'card', label: 'Card', description: 'Customer pays by debit or credit card', icon: 'card-outline' },
+  { id: 'credit', label: 'Credit', description: 'Add to a customer\'s Khata tab', icon: 'book-outline' },
 ];
 
 export default function CheckoutScreen() {
@@ -32,8 +36,24 @@ export default function CheckoutScreen() {
   const clearCart = useCartStore((state) => state.clearCart);
   const { store } = useSelectedStore();
   const createOrder = useCreateOrder();
+  const selectedContact = useContactPickerStore((state) => state.selectedContact);
+  const setSelectedContact = useContactPickerStore((state) => state.setSelectedContact);
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
+  const [cashReceivedInput, setCashReceivedInput] = useState('');
+
+  // contactPickerStore is shared with the new-purchase flow — clear any
+  // stale pick left over from an abandoned visit there so it never silently
+  // leaks in here. Only runs once per fresh navigation to checkout.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => setSelectedContact(null), []);
+
+  const cashReceived = Number(cashReceivedInput);
+  const hasValidCash = cashReceivedInput.trim() !== '' && Number.isFinite(cashReceived);
+  const changeDue = useMemo(
+    () => (hasValidCash ? cashReceived - total : null),
+    [hasValidCash, cashReceived, total],
+  );
 
   const handleCompleteSale = async () => {
     if (items.length === 0) {
@@ -44,14 +64,25 @@ export default function CheckoutScreen() {
       Alert.alert('No store selected', 'Please select a store before completing the sale.');
       return;
     }
+    if (paymentMethod === 'cash' && (!hasValidCash || changeDue === null || changeDue < 0)) {
+      Alert.alert('Not enough cash entered', 'Enter a cash amount that covers the total.');
+      return;
+    }
+    if (paymentMethod === 'credit' && !selectedContact) {
+      Alert.alert('Select a customer', 'Choose or add a contact to record this credit sale.');
+      return;
+    }
     try {
       const order = await createOrder.mutateAsync({
         storeId: store.id,
         storeName: store.name,
         items,
         paymentMethod,
+        cashReceived: paymentMethod === 'cash' ? cashReceived : undefined,
+        contactId: paymentMethod === 'credit' ? selectedContact?.id : undefined,
       });
       clearCart();
+      setSelectedContact(null);
       router.replace({ pathname: '/checkout/success', params: { orderId: order.id } });
     } catch {
       Alert.alert('Checkout failed', 'Something went wrong while completing the sale. Please try again.');
@@ -59,10 +90,17 @@ export default function CheckoutScreen() {
   };
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
+    <SafeAreaView edges={['top', 'bottom', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
-      <Header title="Checkout" />
-      <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
+      <Header title="Checkout" showProfileShortcut={false} />
+      <KeyboardAwareScrollView
+        className="flex-1"
+        contentContainerClassName="px-5"
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        enableOnAndroid
+        extraScrollHeight={20}
+      >
         <Text className="text-base font-bold text-gray-900 dark:text-gray-50">Sale Summary</Text>
         <View className="mt-3 gap-3">
           {items.map((item) => (
@@ -130,7 +168,57 @@ export default function CheckoutScreen() {
             );
           })}
         </View>
-      </ScrollView>
+
+        {paymentMethod === 'credit' ? (
+          <View className="pb-6">
+            <Pressable
+              onPress={() => router.push({ pathname: '/contact-picker', params: { defaultType: 'customer' } })}
+              className="h-[52px] flex-row items-center justify-between rounded-2xl border border-gray-200 dark:border-gray-700 px-4"
+            >
+              <Text className={selectedContact ? 'text-base text-gray-900 dark:text-gray-50' : 'text-base text-gray-400'}>
+                {selectedContact?.name ?? 'Select a customer'}
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+            </Pressable>
+          </View>
+        ) : null}
+
+        {paymentMethod === 'cash' ? (
+          <View className="pb-6">
+            <View className="flex-row items-end gap-2">
+              <View className="flex-1">
+                <Input
+                  label="Cash Received"
+                  placeholder="0"
+                  keyboardType="numeric"
+                  value={cashReceivedInput}
+                  onChangeText={setCashReceivedInput}
+                />
+              </View>
+              <Pressable
+                onPress={() => setCashReceivedInput(String(total))}
+                className="h-[52px] items-center justify-center rounded-2xl border border-gray-200 dark:border-gray-700 px-4"
+              >
+                <Text className="text-sm font-semibold text-primary-600 dark:text-primary-400">Exact</Text>
+              </Pressable>
+            </View>
+            {changeDue !== null ? (
+              <View className="mt-3 flex-row items-center justify-between rounded-2xl bg-gray-50 dark:bg-gray-900 px-4 py-3">
+                <Text className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                  {changeDue >= 0 ? 'Change Due' : 'Still Owed'}
+                </Text>
+                <Text
+                  className={`text-base font-bold ${
+                    changeDue >= 0 ? 'text-gray-900 dark:text-gray-50' : 'text-red-500 dark:text-red-400'
+                  }`}
+                >
+                  {formatPrice(Math.abs(changeDue))}
+                </Text>
+              </View>
+            ) : null}
+          </View>
+        ) : null}
+      </KeyboardAwareScrollView>
 
       <View className="border-t border-gray-100 dark:border-gray-800 px-5 pb-2 pt-4">
         <Button

@@ -5,6 +5,7 @@ import { formatDateTime, formatPrice } from '@/utils/format';
 const paymentLabels: Record<Order['paymentMethod'], string> = {
   cash: 'Cash',
   card: 'Card',
+  credit: 'Credit (Khata)',
 };
 
 function escapeHtml(value: string): string {
@@ -152,6 +153,18 @@ export function buildInvoiceHtml(order: Order): string {
             <div class="label">Total</div>
             <div class="value">${formatPrice(order.total)}</div>
           </div>
+          ${
+            order.paymentMethod === 'cash' && order.cashReceived !== null
+              ? `<div class="totals-row">
+                  <div class="label">Cash Received</div>
+                  <div class="value">${formatPrice(order.cashReceived)}</div>
+                </div>
+                <div class="totals-row">
+                  <div class="label">Change Given</div>
+                  <div class="value">${formatPrice(order.changeDue ?? 0)}</div>
+                </div>`
+              : ''
+          }
         </div>
 
         <div class="footer">Thank you for shopping with ${storeName}.</div>

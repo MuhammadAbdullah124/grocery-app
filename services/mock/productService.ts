@@ -1,6 +1,6 @@
 import { delay } from '@/lib/delay';
 import { ApiRequestError } from '@/types';
-import type { Product, ProductCategory, ProductInput } from '@/types';
+import type { Product, ProductInput } from '@/types';
 import * as productStore from './productStore';
 
 export async function getProducts(): Promise<Product[]> {
@@ -43,10 +43,10 @@ export async function getDeals(): Promise<Product[]> {
   return products.filter((p) => p.discountPrice !== null);
 }
 
-export async function getProductsByCategory(category: ProductCategory): Promise<Product[]> {
+export async function getProductsByCategory(categoryId: string): Promise<Product[]> {
   await delay();
   const products = await productStore.getAllProducts();
-  return products.filter((p) => p.category === category);
+  return products.filter((p) => p.categoryId === categoryId);
 }
 
 export async function createProduct(input: ProductInput): Promise<Product> {

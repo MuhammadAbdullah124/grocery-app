@@ -1,5 +1,5 @@
 import { config } from '@/constants/config';
-import type { AuthCredentials, RegisterPayload, User } from '@/types';
+import type { AuthCredentials, ProfileUpdatePayload, RegisterPayload, User } from '@/types';
 import { apiClient } from './client';
 import { setAuthToken, clearAuthToken, getAuthToken } from '@/lib/secureStore';
 import * as mockAuthStore from '@/services/mock/authStore';
@@ -42,6 +42,13 @@ export async function logout(): Promise<void> {
     }
   }
   await clearAuthToken();
+}
+
+export async function updateProfile(payload: ProfileUpdatePayload): Promise<User> {
+  if (config.useMockApi) {
+    return mockAuthStore.updateProfile(payload);
+  }
+  return apiClient.put<User>('/profile', payload);
 }
 
 export async function getSession(): Promise<AuthSession | null> {

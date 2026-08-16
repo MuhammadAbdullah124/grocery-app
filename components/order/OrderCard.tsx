@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/Badge';
 const paymentLabel: Record<PaymentMethod, string> = {
   cash: 'Cash',
   card: 'Card',
+  credit: 'Credit',
 };
 
 interface OrderCardProps {
@@ -26,7 +27,7 @@ function OrderCardBase({ order }: OrderCardProps) {
     >
       <View className="flex-row items-center justify-between">
         <Text className="text-sm font-bold text-gray-900 dark:text-gray-50">{order.orderNumber}</Text>
-        <Badge label={paymentLabel[order.paymentMethod]} variant="neutral" />
+        <Badge label={paymentLabel[order.paymentMethod]} variant={order.paymentMethod === 'credit' ? 'warning' : 'neutral'} />
       </View>
       <Text className="mt-1 text-xs text-gray-400 dark:text-gray-500">{formatDate(order.createdAt)}</Text>
       <View className="mt-3 flex-row items-center justify-between">

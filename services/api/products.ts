@@ -1,5 +1,5 @@
 import { config } from '@/constants/config';
-import type { Product, ProductCategory, ProductInput } from '@/types';
+import type { Product, ProductInput } from '@/types';
 import { apiClient } from './client';
 import * as mockProductService from '@/services/mock/productService';
 
@@ -28,9 +28,9 @@ export async function getDeals(): Promise<Product[]> {
   return apiClient.get<Product[]>('/products/deals');
 }
 
-export async function getProductsByCategory(category: ProductCategory): Promise<Product[]> {
-  if (config.useMockApi) return mockProductService.getProductsByCategory(category);
-  return apiClient.get<Product[]>('/products', { category });
+export async function getProductsByCategory(categoryId: string): Promise<Product[]> {
+  if (config.useMockApi) return mockProductService.getProductsByCategory(categoryId);
+  return apiClient.get<Product[]>('/products', { categoryId });
 }
 
 export async function createProduct(input: ProductInput): Promise<Product> {

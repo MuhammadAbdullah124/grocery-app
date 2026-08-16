@@ -14,11 +14,11 @@ import { Divider } from '@/components/ui/Divider';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { QuantitySelector } from '@/components/product/QuantitySelector';
+import { ProfileShortcut } from '@/components/layout/ProfileShortcut';
 import { useProduct } from '@/hooks/useProducts';
 import { useCartStore } from '@/store/cartStore';
 import { useIconColor } from '@/hooks/useIconColor';
 import { formatPrice, formatUnit } from '@/utils/format';
-import { categoryMeta } from '@/constants/theme';
 
 export default function ProductDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -33,6 +33,17 @@ export default function ProductDetailsScreen() {
     return (
       <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
         <StatusBar style="dark" />
+        <View className="flex-row items-center justify-between px-5 pt-3">
+          <Pressable
+            onPress={() => router.back()}
+            className="h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+          >
+            <Ionicons name="chevron-back" size={22} color={iconColor} />
+          </Pressable>
+          <ProfileShortcut />
+        </View>
         <View className="px-5 pt-3">
           <Skeleton height={280} radius={24} />
           <Skeleton height={20} width={180} radius={6} className="mt-5" />
@@ -47,7 +58,7 @@ export default function ProductDetailsScreen() {
     return (
       <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
         <StatusBar style="dark" />
-        <View className="flex-row items-center px-5 pt-3">
+        <View className="flex-row items-center justify-between px-5 pt-3">
           <Pressable
             onPress={() => router.back()}
             className="h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
@@ -56,6 +67,7 @@ export default function ProductDetailsScreen() {
           >
             <Ionicons name="chevron-back" size={22} color={iconColor} />
           </Pressable>
+          <ProfileShortcut />
         </View>
         <ErrorState
           title="Product not found"
@@ -79,7 +91,7 @@ export default function ProductDetailsScreen() {
   };
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
+    <SafeAreaView edges={['top', 'bottom', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="px-5 pt-3">
@@ -92,19 +104,22 @@ export default function ProductDetailsScreen() {
             >
               <Ionicons name="chevron-back" size={22} color={iconColor} />
             </Pressable>
-            <Pressable
-              onPress={() => router.push('/cart')}
-              className="h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
-              accessibilityRole="button"
-              accessibilityLabel="View cart"
-            >
-              <Ionicons name="cart-outline" size={20} color={iconColor} />
-              {cartCount > 0 ? (
-                <View className="absolute -right-1 -top-1 h-4 w-4 items-center justify-center rounded-full bg-primary-500">
-                  <Text className="text-[10px] font-bold text-white">{cartCount}</Text>
-                </View>
-              ) : null}
-            </Pressable>
+            <View className="flex-row items-center gap-2">
+              <Pressable
+                onPress={() => router.push('/cart')}
+                className="h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800"
+                accessibilityRole="button"
+                accessibilityLabel="View cart"
+              >
+                <Ionicons name="cart-outline" size={20} color={iconColor} />
+                {cartCount > 0 ? (
+                  <View className="absolute -right-1 -top-1 h-4 w-4 items-center justify-center rounded-full bg-primary-500">
+                    <Text className="text-[10px] font-bold text-white">{cartCount}</Text>
+                  </View>
+                ) : null}
+              </Pressable>
+              <ProfileShortcut />
+            </View>
           </View>
 
           <View className="mt-4 aspect-square w-full overflow-hidden rounded-3xl bg-gray-50 dark:bg-gray-800">
@@ -112,7 +127,7 @@ export default function ProductDetailsScreen() {
           </View>
 
           <View className="mt-5 flex-row items-center gap-2">
-            <Badge label={categoryMeta[product.category]?.label ?? product.category} variant="neutral" />
+            <Badge label={product.category} variant="neutral" />
             <Badge label={outOfStock ? 'Out of stock' : 'Available'} variant={outOfStock ? 'danger' : 'success'} />
           </View>
 

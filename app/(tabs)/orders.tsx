@@ -9,6 +9,7 @@ import { RevenueChart } from '@/components/accounting/RevenueChart';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { ProfileShortcut } from '@/components/layout/ProfileShortcut';
 import { useOrders, useSalesSummary } from '@/hooks/useOrders';
 import { formatPrice } from '@/utils/format';
 
@@ -46,9 +47,12 @@ export default function AccountingScreen() {
   return (
     <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-white dark:bg-black">
       <StatusBar style="dark" />
-      <View className="px-5 pb-2 pt-3">
-        <Text className="text-2xl font-bold text-gray-900 dark:text-gray-50">Accounting</Text>
-        <Text className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">Your sales, at a glance.</Text>
+      <View className="flex-row items-center justify-between px-5 pb-2 pt-3">
+        <View>
+          <Text className="text-2xl font-bold text-gray-900 dark:text-gray-50">Accounting</Text>
+          <Text className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">Your sales, at a glance.</Text>
+        </View>
+        <ProfileShortcut />
       </View>
 
       {summaryQuery.isError || ordersQuery.isError ? (

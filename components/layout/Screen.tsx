@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { ScrollView, View, type ScrollViewProps } from 'react-native';
+import { View, type ScrollViewProps } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
@@ -24,15 +25,17 @@ export function Screen({
     <SafeAreaView edges={edges} className={`flex-1 bg-white dark:bg-black ${className ?? ''}`}>
       <StatusBar style="dark" />
       {scroll ? (
-        <ScrollView
+        <KeyboardAwareScrollView
           className="flex-1"
           contentContainerClassName={contentContainerClassName}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          enableOnAndroid
+          extraScrollHeight={20}
           {...scrollProps}
         >
           {children}
-        </ScrollView>
+        </KeyboardAwareScrollView>
       ) : (
         <View className={`flex-1 ${contentContainerClassName ?? ''}`}>{children}</View>
       )}

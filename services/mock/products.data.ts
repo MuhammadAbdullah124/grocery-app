@@ -1,10 +1,18 @@
 import type { Product } from '@/types';
+import { MOCK_CATEGORIES } from './categories.data';
+import { MOCK_UNITS } from './units.data';
 
 function image(name: string, bg: string): string {
   return `https://placehold.co/300x300/${bg}/1f2937.png?text=${encodeURIComponent(name)}&font=roboto`;
 }
 
-export const MOCK_PRODUCTS: Product[] = [
+/** Raw fixtures keyed by category/unit slug — turned into real Category/Unit-shaped ids+names below. */
+type RawMockProduct = Omit<Product, 'category' | 'categoryId' | 'unit' | 'unitId'> & {
+  category: string;
+  unit: string;
+};
+
+const RAW_PRODUCTS: RawMockProduct[] = [
   // Fruits
   {
     id: 'p-001',
@@ -483,3 +491,19 @@ export const MOCK_PRODUCTS: Product[] = [
     unit: 'pack',
   },
 ];
+
+const categoryBySlug = new Map(MOCK_CATEGORIES.map((c) => [c.slug, c]));
+const unitBySlug = new Map(MOCK_UNITS.map((u) => [u.slug, u]));
+
+export const MOCK_PRODUCTS: Product[] = RAW_PRODUCTS.map((product) => {
+  const category = categoryBySlug.get(product.category);
+  const unit = unitBySlug.get(product.unit);
+
+  return {
+    ...product,
+    category: category?.name ?? product.category,
+    categoryId: category?.id ?? 'cat-fruits',
+    unit: unit?.name ?? product.unit,
+    unitId: unit?.id ?? 'unit-pc',
+  };
+});

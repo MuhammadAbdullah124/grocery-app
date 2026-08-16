@@ -1,30 +1,28 @@
 import { Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import type { ProductCategory } from '@/types';
-import { categoryMeta } from '@/constants/theme';
+import type { Category } from '@/types';
+import { categoryColor } from '@/utils/productImage';
 
 interface CategoryChipProps {
-  category: ProductCategory;
+  category: Category;
   selected?: boolean;
   onPress: () => void;
 }
 
 export function CategoryChip({ category, selected = false, onPress }: CategoryChipProps) {
-  const meta = categoryMeta[category];
-
   return (
     <Pressable onPress={onPress} className="mr-4 items-center" style={{ width: 72 }}>
       <View
         className={`h-14 w-14 items-center justify-center rounded-2xl ${selected ? 'bg-primary-500' : ''}`}
-        style={!selected ? { backgroundColor: meta.color } : undefined}
+        style={!selected ? { backgroundColor: `#${categoryColor(category.name)}` } : undefined}
       >
-        <Ionicons name={meta.icon} size={24} color={selected ? '#ffffff' : '#374151'} />
+        <Ionicons name="pricetag" size={22} color={selected ? '#ffffff' : '#374151'} />
       </View>
       <Text
         numberOfLines={1}
         className={`mt-1.5 text-xs ${selected ? 'font-semibold text-primary-600 dark:text-primary-400' : 'text-gray-600 dark:text-gray-300'}`}
       >
-        {meta.label}
+        {category.name}
       </Text>
     </Pressable>
   );

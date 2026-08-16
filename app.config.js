@@ -26,22 +26,23 @@ module.exports = {
       package: 'com.freshcart.app',
       versionCode: androidVersionCode,
       adaptiveIcon: {
-        backgroundColor: '#E6F4FE',
+        backgroundColor: '#1db567',
         foregroundImage: './assets/android-icon-foreground.png',
         backgroundImage: './assets/android-icon-background.png',
         monochromeImage: './assets/android-icon-monochrome.png',
       },
       predictiveBackGestureEnabled: false,
       permissions: ['CAMERA'],
-      // These get pulled in by dependencies (expo-camera's video-recording support,
-      // react-native's dev-menu overlay, etc.) but nothing in this app actually uses
-      // audio recording, draw-over-other-apps, or local file storage — blocking them
-      // keeps the release manifest limited to what's genuinely justified for Play
-      // Store's permissions review.
+      // READ_EXTERNAL_STORAGE (and its modern READ_MEDIA_IMAGES equivalent,
+      // added automatically by expo-image-picker's own plugin below) is
+      // needed to pick a product photo from the gallery. RECORD_AUDIO,
+      // SYSTEM_ALERT_WINDOW, and WRITE_EXTERNAL_STORAGE remain blocked —
+      // nothing in this app records audio, draws over other apps, or writes
+      // to shared storage, so keeping them out limits the release manifest
+      // to what's genuinely justified for Play Store's permissions review.
       blockedPermissions: [
         'android.permission.RECORD_AUDIO',
         'android.permission.SYSTEM_ALERT_WINDOW',
-        'android.permission.READ_EXTERNAL_STORAGE',
         'android.permission.WRITE_EXTERNAL_STORAGE',
       ],
     },
@@ -61,10 +62,17 @@ module.exports = {
         },
       ],
       [
+        'expo-image-picker',
+        {
+          photosPermission: 'FreshCart uses your photo library to set a product photo.',
+          cameraPermission: 'FreshCart uses your camera to take a product photo.',
+        },
+      ],
+      [
         'expo-splash-screen',
         {
           backgroundColor: '#ffffff',
-          image: './assets/icon.png',
+          image: './assets/splash-icon.png',
           imageWidth: 160,
         },
       ],

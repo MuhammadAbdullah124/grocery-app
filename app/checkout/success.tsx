@@ -37,6 +37,22 @@ export default function CheckoutSuccessScreen() {
               <Text className="text-sm text-gray-500 dark:text-gray-400">Total Paid</Text>
               <Text className="text-sm font-semibold text-gray-900 dark:text-gray-50">{formatPrice(orderQuery.data.total)}</Text>
             </View>
+            {orderQuery.data.paymentMethod === 'cash' && orderQuery.data.cashReceived !== null ? (
+              <>
+                <View className="mt-2 flex-row justify-between">
+                  <Text className="text-sm text-gray-500 dark:text-gray-400">Cash Received</Text>
+                  <Text className="text-sm font-semibold text-gray-900 dark:text-gray-50">
+                    {formatPrice(orderQuery.data.cashReceived)}
+                  </Text>
+                </View>
+                <View className="mt-2 flex-row justify-between">
+                  <Text className="text-sm text-gray-500 dark:text-gray-400">Change Given</Text>
+                  <Text className="text-sm font-semibold text-gray-900 dark:text-gray-50">
+                    {formatPrice(orderQuery.data.changeDue ?? 0)}
+                  </Text>
+                </View>
+              </>
+            ) : null}
           </View>
         ) : null}
       </View>

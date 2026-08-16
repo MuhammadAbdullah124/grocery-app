@@ -1,4 +1,5 @@
 import '../global.css';
+import '@/lib/keyboardAwareInterop';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { Stack } from 'expo-router';
@@ -59,6 +60,10 @@ export default function RootLayout() {
                 <Stack.Screen name="receipt/[id]" />
                 <Stack.Screen name="legal/[slug]" />
                 <Stack.Screen name="inventory" />
+                <Stack.Screen name="profile" />
+                <Stack.Screen name="contacts" />
+                <Stack.Screen name="purchases" />
+                <Stack.Screen name="contact-picker" options={{ presentation: 'modal' }} />
               </Stack.Protected>
             </Stack>
           )}

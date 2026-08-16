@@ -8,23 +8,26 @@ import { Input } from '@/components/ui/Input';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorState } from '@/components/ui/ErrorState';
+import { ProfileShortcut } from '@/components/layout/ProfileShortcut';
 import { CategoryChip } from '@/components/product/CategoryChip';
 import { ProductListItem } from '@/components/product/ProductListItem';
 import { useProducts, useProductsByCategory, useSearchProducts } from '@/hooks/useProducts';
-import { CATEGORY_ORDER } from '@/constants/categories';
-import type { Product, ProductCategory } from '@/types';
+import { useCategories } from '@/hooks/useCategories';
+import type { Product } from '@/types';
 
 export default function SearchScreen() {
-  const params = useLocalSearchParams<{ category?: string }>();
+  const params = useLocalSearchParams<{ categoryId?: string }>();
   const [inputValue, setInputValue] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<ProductCategory | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+
+  const categoriesQuery = useCategories();
 
   useEffect(() => {
-    if (params.category && CATEGORY_ORDER.includes(params.category as ProductCategory)) {
-      setSelectedCategory(params.category as ProductCategory);
+    if (params.categoryId) {
+      setSelectedCategoryId(params.categoryId);
     }
-  }, [params.category]);
+  }, [params.categoryId]);
 
   useEffect(() => {
     const handle = setTimeout(() => setDebouncedQuery(inputValue.trim()), 300);
@@ -34,35 +37,38 @@ export default function SearchScreen() {
   const isSearching = debouncedQuery.length > 0;
 
   const searchQuery = useSearchProducts(debouncedQuery);
-  const categoryQuery = useProductsByCategory(!isSearching ? selectedCategory : null);
+  const categoryQuery = useProductsByCategory(!isSearching ? selectedCategoryId : null);
   const allProductsQuery = useProducts();
 
-  const activeQuery = isSearching ? searchQuery : selectedCategory ? categoryQuery : allProductsQuery;
+  const activeQuery = isSearching ? searchQuery : selectedCategoryId ? categoryQuery : allProductsQuery;
   const results: Product[] =
-    isSearching && selectedCategory
-      ? (activeQuery.data ?? []).filter((product) => product.category === selectedCategory)
+    isSearching && selectedCategoryId
+      ? (activeQuery.data ?? []).filter((product) => product.categoryId === selectedCategoryId)
       : (activeQuery.data ?? []);
 
-  const hasFilters = inputValue.length > 0 || selectedCategory !== null;
+  const hasFilters = inputValue.length > 0 || selectedCategoryId !== null;
 
   const header = (
     <View>
       <View className="flex-row items-center justify-between px-5 pt-3">
         <Text className="text-2xl font-bold text-gray-900 dark:text-gray-50">Search</Text>
-        {hasFilters ? (
-          <Pressable
-            onPress={() => {
-              setInputValue('');
-              setSelectedCategory(null);
-            }}
-            className="flex-row items-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1.5"
-            accessibilityRole="button"
-            accessibilityLabel="Clear filters"
-          >
-            <Ionicons name="close" size={14} color="#6b7280" />
-            <Text className="ml-1 text-xs font-medium text-gray-500 dark:text-gray-400">Clear</Text>
-          </Pressable>
-        ) : null}
+        <View className="flex-row items-center gap-2">
+          {hasFilters ? (
+            <Pressable
+              onPress={() => {
+                setInputValue('');
+                setSelectedCategoryId(null);
+              }}
+              className="flex-row items-center rounded-full bg-gray-100 dark:bg-gray-800 px-3 py-1.5"
+              accessibilityRole="button"
+              accessibilityLabel="Clear filters"
+            >
+              <Ionicons name="close" size={14} color="#6b7280" />
+              <Text className="ml-1 text-xs font-medium text-gray-500 dark:text-gray-400">Clear</Text>
+            </Pressable>
+          ) : null}
+          <ProfileShortcut />
+        </View>
       </View>
 
       <View className="px-5 pt-4">
@@ -75,23 +81,25 @@ export default function SearchScreen() {
         />
       </View>
 
-      <View className="mt-4">
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          className="pl-5"
-          contentContainerStyle={{ paddingRight: 20 }}
-        >
-          {CATEGORY_ORDER.map((category) => (
-            <CategoryChip
-              key={category}
-              category={category}
-              selected={selectedCategory === category}
-              onPress={() => setSelectedCategory((prev) => (prev === category ? null : category))}
-            />
-          ))}
-        </ScrollView>
-      </View>
+      {categoriesQuery.data && categoriesQuery.data.length > 0 ? (
+        <View className="mt-4">
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="pl-5"
+            contentContainerStyle={{ paddingRight: 20 }}
+          >
+            {categoriesQuery.data.map((category) => (
+              <CategoryChip
+                key={category.id}
+                category={category}
+                selected={selectedCategoryId === category.id}
+                onPress={() => setSelectedCategoryId((prev) => (prev === category.id ? null : category.id))}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      ) : null}
 
       {activeQuery.isLoading ? null : (
         <Text className="mt-5 px-5 text-sm text-gray-400 dark:text-gray-500">

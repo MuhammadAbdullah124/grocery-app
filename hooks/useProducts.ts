@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { productsApi } from '@/services/api';
-import type { ProductCategory, ProductInput } from '@/types';
+import type { ProductInput } from '@/types';
 
 export function useProducts() {
   return useQuery({
@@ -24,11 +24,11 @@ export function useDeals() {
   });
 }
 
-export function useProductsByCategory(category: ProductCategory | null) {
+export function useProductsByCategory(categoryId: string | null) {
   return useQuery({
-    queryKey: ['products', 'category', category],
-    queryFn: () => productsApi.getProductsByCategory(category as ProductCategory),
-    enabled: !!category,
+    queryKey: ['products', 'category', categoryId],
+    queryFn: () => productsApi.getProductsByCategory(categoryId as string),
+    enabled: !!categoryId,
   });
 }
 

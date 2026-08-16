@@ -79,6 +79,7 @@ export default function InventoryScreen() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: 20, gap: 12 }}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
           renderItem={({ item }) => (
             <Pressable
               onPress={() => router.push(`/inventory/${item.id}`)}
